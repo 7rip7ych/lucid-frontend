@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://7rip7ych.github.io/lucid_frontend",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
