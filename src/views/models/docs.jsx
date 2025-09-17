@@ -28,7 +28,7 @@ const documents = {
         return result;
     },
     updateOneDoc: async function updateOneDoc(doc) {
-        const response = await fetch(`${server}`, {
+        const response = await fetch(`${server}update`, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
