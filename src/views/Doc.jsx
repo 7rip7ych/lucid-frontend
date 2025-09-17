@@ -1,13 +1,24 @@
-import { useParams } from 'react-router-dom'
-import Header from './includes/header'
-import Footer from './includes/footer'
+import { useParams } from 'react-router-dom';
+import { useState, useEffect} from "react";
+import Header from './includes/header';
+import Footer from './includes/footer';
 import AddForm from './includes/AddForm';
 import UpdateForm from './includes/UpdateForm';
 import documents from './models/docs';
 
 function Doc() {
     const { id } = useParams();
-    let docu = documents.getOneDoc(id);
+    const [docu, setDoc] = useState([]);
+
+    useEffect(() => {
+        const loadData = async () => {
+            const DocData = await documents.getOneDoc(id);
+            setDoc(DocData);
+        };
+
+        loadData();
+    }, [id]);
+    
     return (
         <>
         <Header />
