@@ -3,11 +3,11 @@ function AddForm(props) {
         <>
         <h2>Dokument</h2>
         <form method="POST" action="/" className="new-doc">
-            <label for="title">Titel</label>
-            <input type="text" name="title" value={props.doc.title} />
+            <label htmlFor="title">Titel</label>
+            <input type="text" name="title" defaultValue={props.doc.title} />
 
-            <label for="content">Innehåll</label>
-            <textarea name="content">{props.doc.content}</textarea>
+            <label htmlFor="content">Innehåll</label>
+            <textarea name="content" defaultValue={props.doc.content}></textarea>
 
             <input type="submit" value="Skapa" />
         </form>
