@@ -23,7 +23,7 @@ function Index() {
 
         <h2>Dokument</h2>
             {docs.map((doc) => (
-                <a href={`/${doc._id}`}>{doc.title}</a>
+                <h3 key={doc._id}><a href={`/${doc._id}`}>{doc.title}</a></h3>
             ))}
         {/* <%- include('includes/footer'); %> */}
         </main>
