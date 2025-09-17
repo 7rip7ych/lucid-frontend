@@ -4,12 +4,16 @@ const documents = {
     //Fetch all documents
     allDocuments: async function allDocuments() {
         const response = await fetch(server, { method: 'GET' });
-        return response.json();
+        const result = await response.json();
+
+        return result.docs;
     },
     //Fetch one document
     getOneDoc: async function getOneDoc(docId) {
         const response = await fetch(`${server}${docId}`, { method: 'GET' });
-        return response.json();
+        const result = await response.json();
+
+        return result;
     }
 };
 
