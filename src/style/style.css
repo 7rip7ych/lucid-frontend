@@ -74,3 +74,12 @@ footer {
     padding: 1.4rem 8rem;
     flex-shrink: 0;
 }
+
+header a {
+    color: inherit;
+    text-decoration-line: none;
+}
+
+header a:hover {
+    color: #ccc;
+}
