@@ -2,9 +2,8 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect} from "react";
 import Header from './includes/header';
 import Footer from './includes/footer';
-import AddForm from './includes/AddForm';
-import UpdateForm from './includes/UpdateForm';
 import documents from './models/docs';
+import Form from './includes/Form';
 
 function Doc() {
     const { id } = useParams();
@@ -23,8 +22,7 @@ function Doc() {
         <>
         <Header />
         <main className="main" id="main">
-            <AddForm doc={docu} />
-            <UpdateForm doc={docu} />
+            <Form doc={docu} />
         </main>
         <Footer />
         </>
