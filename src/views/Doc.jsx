@@ -23,7 +23,7 @@ function Doc() {
     return (
         <>
         <Header />
-        <main className="main" id="main">
+        <main className="main">
             <h2>Dokument</h2>
             {load}
             <Form doc={docu} />

@@ -16,11 +16,12 @@ function Index() {
 
         loadData();
     }, []);
+
     return (
         <>
 
         <Header />
-        <main className="main" id="main">
+        <main className="main">
 
         <h2>Dokument</h2>
             {load}
@@ -29,7 +30,7 @@ function Index() {
             ))}
         </main>
         <Footer />
-        
+
         </>
     );
 }
