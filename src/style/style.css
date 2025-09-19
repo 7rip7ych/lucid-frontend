@@ -83,3 +83,8 @@ header a {
 header a:hover {
     color: #ccc;
 }
+
+.loading-gif {
+    position: relative;
+    max-width: 200px;
+}
