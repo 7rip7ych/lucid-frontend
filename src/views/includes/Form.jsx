@@ -44,7 +44,7 @@ function Form(props) {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        
+
         switch (e.nativeEvent.submitter.value) {
             case "Skapa":
                 await createDoc();
@@ -61,7 +61,7 @@ function Form(props) {
 
     return (
         <>
-        <h2>Dokument</h2>
+
         <form onSubmit={handleSubmit} className="new-doc">
             <label htmlFor="id">Id</label>
             <input type="text" name="id" defaultValue={props.doc._id} readOnly/>
@@ -76,6 +76,7 @@ function Form(props) {
             <input type="submit" value="Uppdatera" />
             <input type="submit" value="Radera" />
         </form>
+        
         </>
     );
 };

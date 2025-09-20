@@ -8,11 +8,13 @@ import Form from './includes/Form';
 function Doc() {
     const { id } = useParams();
     const [docu, setDoc] = useState([]);
+    const [load, setLoading] = useState(<img src="src/assets/skateboard.gif" alt="loading" className="loading-gif" />);
 
     useEffect(() => {
         const loadData = async () => {
             const DocData = await documents.getOneDoc(id);
             setDoc(DocData);
+            setLoading();
         };
 
         loadData();
@@ -21,7 +23,9 @@ function Doc() {
     return (
         <>
         <Header />
-        <main className="main" id="main">
+        <main className="main">
+            <h2>Dokument</h2>
+            {load}
             <Form doc={docu} />
         </main>
         <Footer />
