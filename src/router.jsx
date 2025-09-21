@@ -1,6 +1,6 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./views/index";
-import Doc from "./views/doc";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import Index from "./views/Index";
+import Doc from "./views/Doc";
 
 export default function App() {
     return (
