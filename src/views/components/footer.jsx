@@ -6,7 +6,7 @@ function Footer() {
         <>
 
         <footer>
-            <p className="copyright">&copy; Emil Folino</p>
+            <p className="copyright">&copy; Emil Folino, Ida Alin & Lucas Danielsson</p>
         </footer>
 
         </>

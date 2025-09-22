@@ -22,6 +22,13 @@ body {
     height: 100%;
 }
 
+/* Same properties as body */
+#root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 h1 {
     font-size: 1.8rem;
 }
@@ -66,4 +73,18 @@ footer {
     color: #fff;
     padding: 1.4rem 8rem;
     flex-shrink: 0;
+}
+
+header a {
+    color: inherit;
+    text-decoration-line: none;
+}
+
+header a:hover {
+    color: #ccc;
+}
+
+.loading-gif {
+    position: relative;
+    max-width: 200px;
 }
