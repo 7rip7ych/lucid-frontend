@@ -1,3 +1,4 @@
+import React from 'react';
 
 function Footer() {
 
@@ -5,7 +6,7 @@ function Footer() {
         <>
 
         <footer>
-            <p class="copyright">&copy; Emil Folino</p>
+            <p className="copyright">&copy; Emil Folino</p>
         </footer>
 
         </>

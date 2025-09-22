@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect} from "react";
 import Header from './includes/header'
 import Footer from './includes/footer'
