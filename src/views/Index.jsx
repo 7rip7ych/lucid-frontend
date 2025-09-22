@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect} from "react";
-import Header from './includes/header'
-import Footer from './includes/footer'
+import Header from './components/Header'
+import Footer from './components/Footer'
 import documents from './models/docs'
 
 function Index() {
