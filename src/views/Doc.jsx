@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect} from "react";
-import Header from './includes/header';
-import Footer from './includes/footer';
+import Header from './components/Header';
+import Footer from './components/Footer';
 import documents from './models/docs';
-import Form from './includes/Form';
+import Form from './components/Form';
 
 function Doc() {
     const { id } = useParams();
