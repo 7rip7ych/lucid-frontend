@@ -32,13 +32,22 @@ describe('Testing documents functions:', async() => {
         'title': 'Hello',
         'content': 'update!'
     });
+    const getUpdated = await documents.getOneDoc(lastId);
+
     test('updateOneDoc updates one document', () => {
         expect(updatedDoc.modifiedCount).toBe(1);
+        expect(getUpdated).toStrictEqual({
+            '_id': lastId,
+            'title': 'Hello',
+            'content': 'update!'
+        });
     });
 
     const deletedDoc = await documents.deleteOneDoc(lastId);
+    
     test('deleteOneDoc deletes one document', () => {
         expect(deletedDoc.deletedCount).toBe(1);
+        expect(async() => documents.getOneDoc(lastId)).rejects.toThrowError('Unexpected end of JSON input');
     });
     
     // No test for delete all function to preserve the documents
