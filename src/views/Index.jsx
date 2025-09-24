@@ -1,12 +1,13 @@
 import React from 'react';
 import { useState, useEffect} from "react";
-import Header from './components/Header'
-import Footer from './components/Footer'
-import documents from './models/docs'
+import Header from './components/Header';
+import Footer from './components/Footer';
+import documents from './models/docs';
+import imgUrl from '../assets/skateboard.gif';
 
 function Index() {
     const [docs, setDocs] = useState([]);
-    const [load, setLoading] = useState(<img src="/skateboard.gif" alt="loading" className="loading-gif" />);
+    const [load, setLoading] = useState(<img src={imgUrl} alt="loading" className="loading-gif" />);
 
     useEffect(() => {
         const loadData = async () => {
