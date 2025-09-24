@@ -6,7 +6,7 @@ function Header() {
         <>
 
         <header>
-            <h1><a href="">SSR Editor</a></h1>
+            <h1><a href="/">SSR Editor</a></h1>
         </header>
 
         </>
