@@ -6,7 +6,7 @@ import documents from './models/docs'
 
 function Index() {
     const [docs, setDocs] = useState([]);
-    const [load, setLoading] = useState(<img src="src/assets/skateboard.gif" alt="loading" className="loading-gif" />);
+    const [load, setLoading] = useState(<img src="/skateboard.gif" alt="loading" className="loading-gif" />);
 
     useEffect(() => {
         const loadData = async () => {
