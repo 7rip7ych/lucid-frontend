@@ -9,7 +9,5 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/tests/setup.js',
   },
-  build: {
-    base: 'https://7rip7ych.github.io/lucid-frontend/'
-  }
+  base: 'https://7rip7ych.github.io/lucid-frontend/'
 });
