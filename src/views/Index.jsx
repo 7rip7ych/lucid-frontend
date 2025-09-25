@@ -3,6 +3,7 @@ import { useState, useEffect} from "react";
 import Header from './components/Header'
 import Footer from './components/Footer'
 import documents from './models/docs'
+import { Link } from 'react-router-dom';
 
 function Index() {
     const [docs, setDocs] = useState([]);
@@ -27,7 +28,7 @@ function Index() {
         <h2>Dokument</h2>
             {load}
             {docs.map((doc) => (
-                <h3 key={doc._id}><a href={`/lucid-frontend/${doc._id}`}>{doc.title}</a></h3>
+                <h3 key={doc._id}><Link to={doc._id}>{doc.title}</Link></h3>
             ))}
         </main>
         <Footer />
