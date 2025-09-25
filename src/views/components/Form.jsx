@@ -36,7 +36,7 @@ function Form(props) {
 
     async function deleteDoc() {
         if (props.doc._id) {
-            documents.deleteOneDoc(props.doc._id);
+            await documents.deleteOneDoc(props.doc._id);
         }
         
         navigate("/lucid-frontend/");  // Redirect to home
