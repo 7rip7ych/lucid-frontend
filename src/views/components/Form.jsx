@@ -31,7 +31,10 @@ function Form(props) {
 
         await documents.updateOneDoc(updatedDoc);
         
-        window.location.reload(); // Reload page
+        // Show success
+        const updateBtn = document.getElementById("update");
+        updateBtn.classList.add("success-animation");
+        setTimeout(() => updateBtn.classList.remove("success-animation"), 1000);
     }
 
     async function deleteDoc() {
@@ -72,9 +75,9 @@ function Form(props) {
             <label htmlFor="content">Innehåll</label>
             <textarea name="content" defaultValue={props.doc.content} onChange={handleChange}></textarea>
 
-            <input type="submit" value="Skapa" />
-            <input type="submit" value="Uppdatera" />
-            <input type="submit" value="Radera" />
+            <input type="submit" id="create" value="Skapa" />
+            <input type="submit" id="update" value="Uppdatera" />
+            <input type="submit" id="delete" value="Radera" />
         </form>
         
         </>
