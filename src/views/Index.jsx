@@ -1,15 +1,15 @@
-import React from 'react';
 import { useState, useEffect} from "react";
+import { Link, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import documents from './models/docs';
-import { Link } from 'react-router-dom';
 import imgUrl from '../assets/skateboard.gif';
 
 function Index() {
+    const { location } = useLocation();
     const [docs, setDocs] = useState([]);
     const [load, setLoading] = useState(<img src={imgUrl} alt="loading" className="loading-gif" />);
-
+    
     useEffect(() => {
         const loadData = async () => {
             const allDocsData = await documents.allDocuments();
@@ -18,7 +18,7 @@ function Index() {
         };
 
         loadData();
-    }, []);
+    }, [location]);
 
     return (
         <>
