@@ -9,5 +9,10 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/tests/setup.js',
   },
-  base: '/lucid-frontend/'
+  base: '',
+  build: {
+    rollupOptions: {
+      external: ['./react-router', './react-router-dom']
+    }
+  }
 });
