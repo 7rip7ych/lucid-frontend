@@ -31,7 +31,7 @@ function Form(props) {
 
         await documents.updateOneDoc(updatedDoc);
         
-        navigate(`/lucid-frontend/${updatedDoc.id}`); // Reload page
+        window.location.reload(); // Reload page
     }
 
     async function deleteDoc() {
