@@ -4,7 +4,7 @@ import Doc from "./views/Doc";
 
 export default function App() {
     return (
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <BrowserRouter>
         <Routes>
             <Route path="/lucid-frontend/" element={<Index />} />
             <Route path="/lucid-frontend/:id" element={<Doc />} />
