@@ -19,7 +19,7 @@ function Form(props) {
         };
         const result = await documents.addOneDoc(newDoc);
 
-        navigate(`/${result.insertedId}`); // Redirect to new id
+        navigate(`/lucid-frontend/${result.insertedId}`); // Redirect to new id
     }
 
     async function updateDoc() {
@@ -31,15 +31,18 @@ function Form(props) {
 
         await documents.updateOneDoc(updatedDoc);
         
-        navigate(0); // Reload page
+        // Show success
+        const updateBtn = document.getElementById("update");
+        updateBtn.classList.add("success-animation");
+        setTimeout(() => updateBtn.classList.remove("success-animation"), 1000);
     }
 
     async function deleteDoc() {
         if (props.doc._id) {
-            documents.deleteOneDoc(props.doc._id);
+            await documents.deleteOneDoc(props.doc._id);
         }
         
-        navigate("/");  // Redirect to home
+        navigate("/lucid-frontend/");  // Redirect to home
     }
 
     async function handleSubmit(e) {
@@ -72,9 +75,9 @@ function Form(props) {
             <label htmlFor="content">Innehåll</label>
             <textarea name="content" defaultValue={props.doc.content} onChange={handleChange}></textarea>
 
-            <input type="submit" value="Skapa" />
-            <input type="submit" value="Uppdatera" />
-            <input type="submit" value="Radera" />
+            <input type="submit" id="create" value="Skapa" />
+            <input type="submit" id="update" value="Uppdatera" />
+            <input type="submit" id="delete" value="Radera" />
         </form>
         
         </>

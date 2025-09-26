@@ -68,6 +68,11 @@ textarea {
     padding: 1.4rem;
 }
 
+input[type=submit] {
+    cursor: pointer;
+    transition: background-color 0.3s ease-out, border 0.3s ease-out;
+}
+
 footer {
     background-color: #333;
     color: #fff;
@@ -87,4 +92,10 @@ header a:hover {
 .loading-gif {
     position: relative;
     max-width: 200px;
+}
+
+
+.success-animation {
+    background-color: #5edd5edc;
+    border: 2px solid #3a9b3a;
 }
