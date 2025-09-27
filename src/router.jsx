@@ -6,8 +6,8 @@ export default function App() {
     return (
     <BrowserRouter>
         <Routes>
-            <Route path="/lucid-frontend/" element={<Index />} />
-            <Route path="/lucid-frontend/:id" element={<Doc />} />
+            <Route path="/" element={<Index />} />
+            <Route path="/:id" element={<Doc />} />
         </Routes>
     </BrowserRouter>
     );

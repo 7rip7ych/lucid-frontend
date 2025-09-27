@@ -19,7 +19,7 @@ function Form(props) {
         };
         const result = await documents.addOneDoc(newDoc);
 
-        navigate(`/lucid-frontend/${result.insertedId}`); // Redirect to new id
+        navigate(`/${result.insertedId}`); // Redirect to new id
     }
 
     async function updateDoc() {
@@ -42,7 +42,7 @@ function Form(props) {
             await documents.deleteOneDoc(props.doc._id);
         }
         
-        navigate("/lucid-frontend/");  // Redirect to home
+        navigate("/");  // Redirect to home
     }
 
     async function handleSubmit(e) {
