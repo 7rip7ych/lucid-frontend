@@ -10,7 +10,7 @@ function Editor(props) {
     const navigate = useNavigate();
     const [title, setNewTitle] = useState("");
     const [content, setNewContent] = useState("");
-    const [editorContent, setEditorContent] = useState(props.doc["content"]);
+    const [editorContent, setEditorContent] = useState("");
 
     function handleChange(e) {
         e.preventDefault();
@@ -71,7 +71,7 @@ function Editor(props) {
     const socket = useRef(null);
 
     useEffect(() => {
-        document.getElementById("texteditor").innerText = editorContent;
+        document.getElementById("texteditor").value = editorContent;
     }, [editorContent])
 
 
@@ -82,7 +82,7 @@ function Editor(props) {
 
         socket.current.on("content", (data) => {
             setEditorContent(data.content);
-            console.log(data.content);
+            // console.log(data.content);
         });
 
         document.getElementById("texteditor").addEventListener("keyup", function(event) {
