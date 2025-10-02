@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import documents from "../models/docs";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
 const SERVER_URL = "http://localhost:1337";
-let socket;
+
 
 function Editor(props) {
     const navigate = useNavigate();
@@ -67,23 +67,26 @@ function Editor(props) {
         }
     }
 
-    
+
+    const socket = useRef(null);
+
     useEffect(() => {
         document.getElementById("texteditor").innerText = editorContent;
     }, [editorContent])
 
 
     useEffect(() => {
-        socket = io(SERVER_URL);
+        socket.current = io(SERVER_URL);
 
-        socket.emit("create", props.doc._id);
+        socket.current.emit("create", props.doc._id);
 
-        socket.on("content", (data) => {
-            setEditorContent(data.content, false);
+        socket.current.on("content", (data) => {
+            setEditorContent(data.content);
+            console.log(data.content);
         });
 
         document.getElementById("texteditor").addEventListener("keyup", function(event) {
-            socket.emit("content", {
+            socket.current.emit("content", {
                 id: props.doc._id,
                 title: props.doc.title,
                 content: event.target.value
@@ -91,7 +94,7 @@ function Editor(props) {
         });
 
         return () => {
-            socket.disconnect();
+            socket.current.disconnect();
         }
     }, [props.doc]);
 
