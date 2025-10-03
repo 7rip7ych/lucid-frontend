@@ -124,10 +124,12 @@ function Editor(props) {
 
                 <label htmlFor="content">Innehåll</label>
                 <textarea id="contenteditor" name="content" className="content" defaultValue={props.doc.content} rows="6" autoFocus></textarea>
-
-                <input type="submit" id="create" value="Skapa" />
-                <input type="submit" id="update" value="Uppdatera" />
-                <input type="submit" id="delete" value="Radera" />
+                
+                <div className="inline-buttons">
+                    <input type="submit" id="create" value="Skapa" />
+                    <input type="submit" id="update" value="Uppdatera" />
+                    <input type="submit" id="delete" value="Radera" />
+                </div>
             </form>
         </div>
         </>
