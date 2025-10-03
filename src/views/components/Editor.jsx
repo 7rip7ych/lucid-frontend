@@ -8,15 +8,22 @@ const SERVER_URL = "http://localhost:1337";
 
 function Editor(props) {
     const navigate = useNavigate();
-    const [title, setNewTitle] = useState("");
-    const [content, setNewContent] = useState("");
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
     const [editorContent, setEditorContent] = useState("");
 
+    // set initial variables
+    useEffect(() => {
+        setTitle(props.doc.title);
+        setEditorContent(props.doc.content);
+    }, [props.doc]);
+
+    // handle edits
     function handleChange(e) {
-        e.preventDefault();
-        e.target.name == "title" ? setNewTitle(e.target.value) : setNewContent(e.target.value);
+        e.target.name == "title" ? setTitle(e.target.value) : setContent(e.target.value);
     }
 
+    // Create new doc
     async function createDoc() {
         let newDoc = {
             "title": title === "" ? props.doc.title : title,
@@ -27,6 +34,7 @@ function Editor(props) {
         navigate(`/lucid-frontend/${result.insertedId}`); // Redirect to new id
     }
 
+    // Update document
     async function updateDoc() {
         let updatedDoc = {
             "id": props.doc._id,
@@ -42,6 +50,7 @@ function Editor(props) {
         setTimeout(() => updateBtn.classList.remove("success-animation"), 1000);
     }
 
+    // Delete the document
     async function deleteDoc() {
         if (props.doc._id) {
             await documents.deleteOneDoc(props.doc._id);
@@ -50,6 +59,7 @@ function Editor(props) {
         navigate("/lucid-frontend/");  // Redirect to home
     }
 
+    // Handle a submission of the form
     async function handleSubmit(e) {
         e.preventDefault();
 
@@ -67,13 +77,14 @@ function Editor(props) {
         }
     }
 
-
-    const socket = useRef(null);
-
+    // set content on change
     useEffect(() => {
         document.getElementById("texteditor").value = editorContent;
     }, [editorContent])
 
+
+    // socket
+    const socket = useRef(null);
 
     useEffect(() => {
         socket.current = io(SERVER_URL);
@@ -106,10 +117,10 @@ function Editor(props) {
             <input type="text" name="id" defaultValue={props.doc._id} readOnly/>
 
             <label htmlFor="title">Titel</label>
-            <input type="text" name="title" defaultValue={props.doc.title} onChange={handleChange} />
+            <input type="text" name="title" defaultValue={title} onChange={handleChange} />
 
             <label htmlFor="content">Innehåll</label>
-            <textarea id="texteditor" name="content" defaultValue={props.doc.content} onChange={handleChange}></textarea>
+            <textarea id="texteditor" name="content" defaultValue={content} onChange={handleChange}></textarea>
 
             <input type="submit" id="create" value="Skapa" />
             <input type="submit" id="update" value="Uppdatera" />
