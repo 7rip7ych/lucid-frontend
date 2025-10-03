@@ -117,13 +117,13 @@ function Editor(props) {
         <div className="editor">
             <form onSubmit={handleSubmit} id="texteditor" className="editor-form new-doc">
                 <label htmlFor="id">Id</label>
-                <input type="text" name="id" defaultValue={props.doc._id} readOnly/>
+                <input type="text" name="id" className="subtitle readonly" defaultValue={props.doc._id} readOnly/>
 
                 <label htmlFor="title">Titel</label>
-                <input type="text" id="titleeditor" name="title" defaultValue={props.doc.title} />
+                <input type="text" id="titleeditor" name="title" className="title" defaultValue={props.doc.title} />
 
                 <label htmlFor="content">Innehåll</label>
-                <textarea id="contenteditor" name="content" defaultValue={props.doc.content} ></textarea>
+                <textarea id="contenteditor" name="content" className="content" defaultValue={props.doc.content} ></textarea>
 
                 <input type="submit" id="create" value="Skapa" />
                 <input type="submit" id="update" value="Uppdatera" />
