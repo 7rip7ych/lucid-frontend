@@ -75,14 +75,21 @@ function Editor(props) {
 
     // set content on change
     useEffect(() => {
-        document.getElementById("titleeditor").value = editorTitle;
-        document.getElementById("contenteditor").value = editorContent;
+        if (typeof editorContent !== "undefined" && typeof editorTitle !== "undefined") {
+            document.getElementById("titleeditor").value = editorTitle;
+            document.getElementById("contenteditor").value = editorContent;
+        }
+        
     }, [editorTitle, editorContent]);
 
     // socket
     const socket = useRef(null);
 
     useEffect(() => {
+        if (!props.doc._id) {
+            return;
+        }
+
         socket.current = io(SERVER_URL);
 
         socket.current.emit("create", props.doc._id);
@@ -103,7 +110,7 @@ function Editor(props) {
         return () => {
             socket.current.disconnect();
         }
-    }, [props.doc]);
+    }, [props.doc._id]);
 
     return (
         <>
