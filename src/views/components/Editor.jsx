@@ -8,26 +8,21 @@ const SERVER_URL = "http://localhost:1337";
 
 function Editor(props) {
     const navigate = useNavigate();
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
+    const [editorTitle, setEditorTitle] = useState("");
     const [editorContent, setEditorContent] = useState("");
 
     // set initial variables
     useEffect(() => {
-        setTitle(props.doc.title);
+        setEditorTitle(props.doc.title)
         setEditorContent(props.doc.content);
     }, [props.doc]);
 
-    // handle edits
-    function handleChange(e) {
-        e.target.name == "title" ? setTitle(e.target.value) : setContent(e.target.value);
-    }
-
+    
     // Create new doc
     async function createDoc() {
         let newDoc = {
-            "title": title === "" ? props.doc.title : title,
-            "content": content === "" ? props.doc.content : content
+            "title": document.getElementById("titleeditor").value,
+            "content": document.getElementById("contenteditor").value
         };
         const result = await documents.addOneDoc(newDoc);
 
@@ -38,8 +33,8 @@ function Editor(props) {
     async function updateDoc() {
         let updatedDoc = {
             "id": props.doc._id,
-            "title": title === "" ? props.doc.title : title,
-            "content": content === "" ? props.doc.content : content
+            "title": document.getElementById("titleeditor").value,
+            "content": document.getElementById("contenteditor").value
         };
 
         await documents.updateOneDoc(updatedDoc);
@@ -77,11 +72,12 @@ function Editor(props) {
         }
     }
 
+
     // set content on change
     useEffect(() => {
-        document.getElementById("texteditor").value = editorContent;
-    }, [editorContent])
-
+        document.getElementById("titleeditor").value = editorTitle;
+        document.getElementById("contenteditor").value = editorContent;
+    }, [editorTitle, editorContent]);
 
     // socket
     const socket = useRef(null);
@@ -92,15 +88,15 @@ function Editor(props) {
         socket.current.emit("create", props.doc._id);
 
         socket.current.on("content", (data) => {
+            setEditorTitle(data.title);
             setEditorContent(data.content);
-            // console.log(data.content);
         });
 
-        document.getElementById("texteditor").addEventListener("keyup", function(event) {
+        document.getElementById("texteditor").addEventListener("keyup", function() {
             socket.current.emit("content", {
                 id: props.doc._id,
-                title: props.doc.title,
-                content: event.target.value
+                title: document.getElementById("titleeditor").value,
+                content: document.getElementById("contenteditor").value
             });
         });
 
@@ -112,15 +108,15 @@ function Editor(props) {
     return (
         <>
 
-        <form onSubmit={handleSubmit} className="new-doc">
+        <form onSubmit={handleSubmit} id="texteditor" className="editor new-doc">
             <label htmlFor="id">Id</label>
             <input type="text" name="id" defaultValue={props.doc._id} readOnly/>
 
             <label htmlFor="title">Titel</label>
-            <input type="text" name="title" defaultValue={title} onChange={handleChange} />
+            <input type="text" id="titleeditor" name="title" defaultValue={props.doc.title} />
 
             <label htmlFor="content">Innehåll</label>
-            <textarea id="texteditor" name="content" defaultValue={content} onChange={handleChange}></textarea>
+            <textarea id="contenteditor" name="content" defaultValue={props.doc.content} ></textarea>
 
             <input type="submit" id="create" value="Skapa" />
             <input type="submit" id="update" value="Uppdatera" />
