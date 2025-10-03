@@ -123,7 +123,7 @@ function Editor(props) {
                 <input type="text" id="titleeditor" name="title" className="title" defaultValue={props.doc.title} />
 
                 <label htmlFor="content">Innehåll</label>
-                <textarea id="contenteditor" name="content" className="content" defaultValue={props.doc.content} ></textarea>
+                <textarea id="contenteditor" name="content" className="content" defaultValue={props.doc.content} rows="6" autoFocus></textarea>
 
                 <input type="submit" id="create" value="Skapa" />
                 <input type="submit" id="update" value="Uppdatera" />
