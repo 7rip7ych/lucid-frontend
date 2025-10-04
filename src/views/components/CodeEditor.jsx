@@ -34,13 +34,16 @@ function CodeEditor() {
     return (
         <>
         <div className="code-editor">
-            <h2>Code Editor</h2>
-            <div>
-                <button onClick={executeCode}>Execute</button>
-                <button onClick={saveCode}>Save</button>
+            <div className="inline-buttons">
+                <button className="blue-button" onClick={saveCode}>Save</button>
+                <button className="blue-button" onClick={executeCode}>Execute</button>
+            </div>
+            <div className="code-title">
+                <input type="text" className="titleEditor" />
             </div>
             <Editor 
                 height="80vh"
+                theme="vs-dark"
                 defaultLanguage="javascript"
                 defaultValue="// write code here"
                 onMount={handleEditorMount}
