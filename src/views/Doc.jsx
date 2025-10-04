@@ -39,11 +39,16 @@ function Doc() {
         <Header />
         <main className="main">
             <h2>Dokument</h2>
+            <div className="toggle-container">
+                <span>Text Editor</span>
+                <label class="switch">
+                    <input type="checkbox" id="changeEditor" className="toggle-checkbox change-editor" onClick={changeEditor} />
+                    <span className="slider round"></span>
+                </label>
+                <span>Code Editor</span>
+            </div>
             {load}
             {editor}
-            <div className="slide-container">
-                <input type="checkbox" id="changeEditor" className="slide-checkbox change-editor" onClick={changeEditor} />
-            </div>
         </main>
         <Footer />
         </>
