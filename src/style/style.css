@@ -95,9 +95,9 @@ header a:hover {
 }
 
 
-.success-animation {
-    background-color: #5edd5edc;
-    border: 2px solid #3a9b3a;
+.editor-form .inline-buttons input.success-animation {
+    background-color: #27AE14;
+    border: 2px inset #3a9b3a;
 }
 
 
