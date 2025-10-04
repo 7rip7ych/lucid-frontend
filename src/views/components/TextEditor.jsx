@@ -22,7 +22,8 @@ function TextEditor(props) {
     async function createDoc() {
         let newDoc = {
             "title": document.getElementById("titleeditor").value,
-            "content": document.getElementById("contenteditor").value
+            "content": document.getElementById("contenteditor").value,
+            "type": "text"
         };
         const result = await documents.addOneDoc(newDoc);
 
@@ -104,14 +105,15 @@ function TextEditor(props) {
             socket.current.emit("content", {
                 id: props.doc._id,
                 title: document.getElementById("titleeditor").value,
-                content: document.getElementById("contenteditor").value
+                content: document.getElementById("contenteditor").value,
+                type: props.doc.type
             });
         });
 
         return () => {
             socket.current.disconnect();
         }
-    }, [props.doc._id]);
+    }, [props.doc._id, props.doc.type]);
 
     return (
         <>
