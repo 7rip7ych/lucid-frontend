@@ -271,6 +271,7 @@ header a:hover {
     border-top: 1px solid #0076D5;
     color: #eee;
     width: fit-content;
+    box-shadow: 2px 2px 4px #0000007d;
 }
 
 .code-title .title:focus {
