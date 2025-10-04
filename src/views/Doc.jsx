@@ -27,7 +27,7 @@ function Doc() {
     function changeEditor(e) {
         if (e.target.checked) {
             console.log("code");
-            setEditor(<CodeEditor />);
+            setEditor(<CodeEditor doc={docu} />);
         } else {
             console.log("text");
             setEditor(<TextEditor doc={docu} />);

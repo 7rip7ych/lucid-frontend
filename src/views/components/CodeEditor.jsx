@@ -3,7 +3,7 @@ import Editor from "@monaco-editor/react";
 
 const execjs_url = "https://execjs.emilfolino.se/code";
 
-function CodeEditor() {
+function CodeEditor(props) {
     const editorRef = useRef(null);
 
     function handleEditorMount(editor) {
@@ -39,7 +39,7 @@ function CodeEditor() {
                 <button className="blue-button" onClick={executeCode}>Execute</button>
             </div>
             <div className="code-title">
-                <input type="text" className="titleEditor" />
+                <input type="text" className="title" defaultValue={props.doc.title} />
             </div>
             <Editor 
                 height="80vh"
