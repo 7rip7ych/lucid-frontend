@@ -34,7 +34,8 @@ function TextEditor(props) {
         let updatedDoc = {
             "id": props.doc._id,
             "title": document.getElementById("titleeditor").value,
-            "content": document.getElementById("contenteditor").value
+            "content": document.getElementById("contenteditor").value,
+            "type": "text"
         };
 
         await documents.updateOneDoc(updatedDoc);

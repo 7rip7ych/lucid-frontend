@@ -18,10 +18,10 @@ function CodeEditor(props) {
 
     async function saveCode() {
         var data = {
-            id: props.doc._id,
-            title: document.getElementById("codeTitle").value,
-            content: editorRef.current.getValue(),
-            type: "code"
+            "id": props.doc._id,
+            "title": document.getElementById("codeTitle").value,
+            "content": editorRef.current.getValue(),
+            "type": "code"
         }
         
         await documents.updateOneDoc(data);
