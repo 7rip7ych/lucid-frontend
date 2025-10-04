@@ -4,7 +4,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import imgUrl from '../assets/skateboard.gif';
 import documents from './models/docs';
-import Editor from './components/Editor';
+import TextEditor from './components/TextEditor';
 import CodeEditor from './components/CodeEditor';
 
 function Doc() {
@@ -17,7 +17,7 @@ function Doc() {
         const loadData = async () => {
             const DocData = await documents.getOneDoc(id);
             setDoc(DocData);
-            setEditor(<Editor doc={DocData} />);
+            setEditor(<TextEditor doc={DocData} />);
             setLoading();
         };
 
@@ -30,7 +30,7 @@ function Doc() {
             setEditor(<CodeEditor />);
         } else {
             console.log("text");
-            setEditor(<Editor doc={docu} />);
+            setEditor(<TextEditor doc={docu} />);
         }
     }
 

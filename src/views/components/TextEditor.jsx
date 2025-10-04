@@ -6,7 +6,7 @@ import { io } from "socket.io-client";
 const SERVER_URL = "http://localhost:1337";
 
 
-function Editor(props) {
+function TextEditor(props) {
     const navigate = useNavigate();
     const [editorTitle, setEditorTitle] = useState("");
     const [editorContent, setEditorContent] = useState("");
@@ -136,4 +136,4 @@ function Editor(props) {
     );
 };
 
-export default Editor;
+export default TextEditor;
