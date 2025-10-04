@@ -63,7 +63,7 @@ main {
 
 input,
 textarea {
-    margin-bottom: 1.4rem;
+    margin-bottom: 1rem;
     font-size: 1rem;
     padding: 1.4rem;
 }
@@ -98,4 +98,60 @@ header a:hover {
 .success-animation {
     background-color: #5edd5edc;
     border: 2px solid #3a9b3a;
+}
+
+
+/* Editor */
+.editor {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 0.8rem;
+    padding: 1rem;
+    box-shadow: 0 5px 10px #000000a1;
+}
+
+.editor-form input[type="text"] {
+    text-align: center;
+}
+
+.editor-form textarea {
+    max-width: 100%;
+    min-width: 100%;
+    resize: vertical;
+}
+
+.editor-form label {
+    display: none;
+}
+
+.editor-form .title {
+    padding: 18px 5px 14px;
+    font-size: 1.5rem;
+}
+
+.editor-form .subtitle.readonly {
+    border: 0;
+    padding: 0;
+    margin-bottom: 8px;
+    color: #555;
+    font-size: 0.9rem;
+    margin-top: -5px;
+}
+
+.editor-form .inline-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.editor-form .inline-buttons input {
+    margin-bottom: 0;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0;
+    background-color: #0074D9;
+    color: #fff;
+    border-color: #5d94db;
 }
