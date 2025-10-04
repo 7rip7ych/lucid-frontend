@@ -2,6 +2,7 @@ import { useRef } from "react";
 import Editor from "@monaco-editor/react";
 import { useState } from "react";
 import { useEffect } from "react";
+import documents from "../models/docs";
 
 const execjs_url = "https://execjs.emilfolino.se/code";
 
@@ -15,8 +16,15 @@ function CodeEditor(props) {
         editorRef.current = editor;
     }
 
-    function saveCode() {
-        console.log(editorRef.current.getValue());
+    async function saveCode() {
+        var data = {
+            id: props.doc._id,
+            title: document.getElementById("codeTitle").value,
+            content: editorRef.current.getValue(),
+            type: "code"
+        }
+        
+        await documents.updateOneDoc(data);
     }
 
     async function executeCode() {
@@ -65,7 +73,7 @@ function CodeEditor(props) {
                 <button className="blue-button" onClick={executeCode}>Execute</button>
             </div>
             <div className="code-title">
-                <input type="text" className="title" defaultValue={props.doc.title} />
+                <input type="text" id="codeTitle" className="title" defaultValue={props.doc.title} />
             </div>
             <Editor 
                 height="80vh"
