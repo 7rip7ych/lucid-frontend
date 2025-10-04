@@ -41,7 +41,7 @@ function Doc() {
             <h2>Dokument</h2>
             <div className="toggle-container">
                 <span>Text Editor</span>
-                <label class="switch">
+                <label className="switch">
                     <input type="checkbox" id="changeEditor" className="toggle-checkbox change-editor" onClick={changeEditor} />
                     <span className="slider round"></span>
                 </label>
