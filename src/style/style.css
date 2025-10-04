@@ -256,3 +256,24 @@ header a:hover {
     background-color: #005FAC;
     border: 3px inset #0085EE;
 }
+
+.code-title {
+    width: 100%;
+    background-color: #181818;
+}
+
+.code-title .title {
+    font-size: 1rem;
+    padding: 0.5rem 0.8rem;
+    background: #1e1e1e;
+    margin: 0;
+    border: 0;
+    border-top: 1px solid #0076D5;
+    color: #eee;
+    width: fit-content;
+}
+
+.code-title .title:focus {
+    border: 1px solid #0076D5;
+    outline: 0;
+}
