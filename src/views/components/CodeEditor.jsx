@@ -1,12 +1,50 @@
+import { useRef } from "react";
 import Editor from "@monaco-editor/react";
 
+const execjs_url = "https://execjs.emilfolino.se/code";
+
 function CodeEditor() {
+    const editorRef = useRef(null);
+
+    function handleEditorMount(editor) {
+        editorRef.current = editor;
+    }
+
+    function saveCode() {
+        console.log(editorRef.current.getValue());
+    }
+
+    async function executeCode() {
+        var data = {
+            code: btoa(editorRef.current.getValue())
+        };
+
+        const response = await fetch(execjs_url, {
+            body: JSON.stringify(data),
+            headers: {
+                'content-type': 'application/json'
+            },
+            method: 'POST'
+        });
+
+        const result = await response.json();
+        console.log(atob(result.data));
+    }
 
     return (
         <>
         <div className="code-editor">
             <h2>Code Editor</h2>
-            <Editor height="80vh" defaultLanguage="javascript" defaultValue="// write code here" />
+            <div>
+                <button onClick={executeCode}>Execute</button>
+                <button onClick={saveCode}>Save</button>
+            </div>
+            <Editor 
+                height="80vh"
+                defaultLanguage="javascript"
+                defaultValue="// write code here"
+                onMount={handleEditorMount}
+            />
         </div>
         </>
     );
