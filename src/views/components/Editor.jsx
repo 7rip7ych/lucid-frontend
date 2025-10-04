@@ -3,7 +3,7 @@ import documents from "../models/docs";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
-const SERVER_URL = "http://localhost:1337";
+const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/";
 
 
 function Editor(props) {
