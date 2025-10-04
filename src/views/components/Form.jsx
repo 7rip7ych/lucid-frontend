@@ -73,7 +73,7 @@ function Form(props) {
             <input type="text" name="title" defaultValue={props.doc.title} onChange={handleChange} />
 
             <label htmlFor="content">Innehåll</label>
-            <textarea name="content" defaultValue={props.doc.content} onChange={handleChange}></textarea>
+            <textarea id="texteditor" name="content" defaultValue={props.doc.content} onChange={handleChange}></textarea>
 
             <input type="submit" id="create" value="Skapa" />
             <input type="submit" id="update" value="Uppdatera" />
