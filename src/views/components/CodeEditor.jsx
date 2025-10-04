@@ -1,10 +1,15 @@
 import { useRef } from "react";
 import Editor from "@monaco-editor/react";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const execjs_url = "https://execjs.emilfolino.se/code";
 
 function CodeEditor(props) {
+    const [contentType, setContentType] = useState("");
+    const [content, setContent] = useState("");
     const editorRef = useRef(null);
+    const docRef = useRef(null);
 
     function handleEditorMount(editor) {
         editorRef.current = editor;
@@ -31,6 +36,27 @@ function CodeEditor(props) {
         console.log(atob(result.data));
     }
 
+    useEffect(() => {
+        // get content
+        if (props.doc._id) {
+            docRef.current = props.doc;
+        }
+        if (docRef.current.type && docRef.current.type == "code") {
+            setContentType("code");
+        } else {
+            setContentType("text");
+        }
+        
+    }, [props.doc]);
+
+    useEffect(() => {
+        if (contentType === "code") {
+            setContent(docRef.current.content);
+        } else {
+            setContent("// " + docRef.current.content.replaceAll("\n", "\n// "));
+        }
+    }, [contentType])
+
     return (
         <>
         <div className="code-editor">
@@ -45,7 +71,7 @@ function CodeEditor(props) {
                 height="80vh"
                 theme="vs-dark"
                 defaultLanguage="javascript"
-                defaultValue="// write code here"
+                defaultValue={content}
                 onMount={handleEditorMount}
             />
         </div>
