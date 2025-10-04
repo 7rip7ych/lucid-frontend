@@ -139,7 +139,7 @@ header a:hover {
     margin-top: -5px;
 }
 
-.editor-form .inline-buttons {
+.inline-buttons {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -228,4 +228,31 @@ header a:hover {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+/* code editor */
+.code-editor {
+    background-color: #1e1e1e;
+}
+
+.code-editor .inline-buttons {
+    justify-content: space-between;
+    padding: 0.4rem 1rem;
+}
+
+.blue-button {
+    padding: 0.4rem 1rem;
+    font-size: 1rem;
+    background-color: #0076D5;
+    color: #eee;
+    letter-spacing: 1px;
+    border: 3px outset #0085EE;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.blue-button:active {
+    transform: translateY(2px);
+    background-color: #005FAC;
+    border: 3px inset #0085EE;
 }
