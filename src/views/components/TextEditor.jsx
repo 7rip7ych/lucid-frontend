@@ -5,7 +5,6 @@ import { io } from "socket.io-client";
 
 const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/";
 
-
 function TextEditor(props) {
     const navigate = useNavigate();
     const [editorTitle, setEditorTitle] = useState("");
