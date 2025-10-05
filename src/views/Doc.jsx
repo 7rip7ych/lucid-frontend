@@ -1,3 +1,4 @@
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect} from "react";
 import Header from './components/Header';
@@ -11,26 +12,23 @@ function Doc() {
     const { id } = useParams();
     const [docu, setDoc] = useState([]);
     const [load, setLoading] = useState(<img src={imgUrl} alt="loading" className="loading-gif" />);
-    const [editor, setEditor] = useState([]);
+    const [editor, setEditor] = useState(<TextEditor />);
 
     useEffect(() => {
         const loadData = async () => {
             const DocData = await documents.getOneDoc(id);
             setDoc(DocData);
-            setEditor(<TextEditor doc={DocData} />);
             setLoading();
         };
 
         loadData();
-    }, [id]);
+    }, [id, editor]);
 
     function changeEditor(e) {
         if (e.target.checked) {
-            console.log("code");
-            setEditor(<CodeEditor doc={docu} />);
+            setEditor(<CodeEditor />);
         } else {
-            console.log("text");
-            setEditor(<TextEditor doc={docu} />);
+            setEditor(<TextEditor />);
         }
     }
 
@@ -48,7 +46,7 @@ function Doc() {
                 <span>Code Editor</span>
             </div>
             {load}
-            {editor}
+            {React.cloneElement(editor, {doc: docu})}
         </main>
         <Footer />
         </>
