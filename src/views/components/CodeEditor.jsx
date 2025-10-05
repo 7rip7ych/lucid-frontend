@@ -7,7 +7,6 @@ import documents from "../models/docs";
 const execjs_url = "https://execjs.emilfolino.se/code";
 
 function CodeEditor(props) {
-    const [contentType, setContentType] = useState("");
     const [content, setContent] = useState("");
     const editorRef = useRef(null);
     const docRef = useRef(null);
@@ -45,25 +44,19 @@ function CodeEditor(props) {
     }
 
     useEffect(() => {
-        // get content
+        // get and format content
         if (props.doc._id) {
             docRef.current = props.doc;
+        } else {
+            return;
         }
         if (docRef.current.type && docRef.current.type == "code") {
-            setContentType("code");
-        } else {
-            setContentType("text");
-        }
-        
-    }, [props.doc]);
-
-    useEffect(() => {
-        if (contentType === "code") {
             setContent(docRef.current.content);
         } else {
             setContent("// " + docRef.current.content.replaceAll("\n", "\n// "));
         }
-    }, [contentType])
+        
+    }, [props.doc]);
 
     return (
         <>
