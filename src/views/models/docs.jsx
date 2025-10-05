@@ -24,7 +24,7 @@ const documents = {
             body: JSON.stringify(doc)
         });
         const result = await response.json();
-        // return id instead?
+
         return result;
     },
     updateOneDoc: async function updateOneDoc(doc) {
