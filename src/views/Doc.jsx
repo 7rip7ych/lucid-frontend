@@ -4,7 +4,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import imgUrl from '../assets/skateboard.gif';
 import documents from './models/docs';
-import Form from './components/Form';
+import Editor from './components/Editor';
 
 function Doc() {
     const { id } = useParams();
@@ -20,14 +20,14 @@ function Doc() {
 
         loadData();
     }, [id]);
-    
+
     return (
         <>
         <Header />
         <main className="main">
             <h2>Dokument</h2>
             {load}
-            <Form doc={docu} />
+            <Editor doc={docu} />
         </main>
         <Footer />
         </>
