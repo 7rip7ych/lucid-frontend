@@ -41,6 +41,17 @@ function CodeEditor(props) {
 
         const result = await response.json();
         console.log(atob(result.data));
+        openTerminal(atob(result.data));
+    }
+
+    function openTerminal(txt) {
+        const terminal = document.getElementById("terminalView");
+        terminal.classList.remove("hidden");
+        terminal.querySelector("p").innerText = txt;
+    }
+
+    function closeTerminal(e) {
+        e.target.parentNode.classList.add("hidden");
     }
 
     useEffect(() => {
@@ -75,6 +86,11 @@ function CodeEditor(props) {
                 defaultValue={content}
                 onMount={handleEditorMount}
             />
+            <div id="terminalView" className="terminal-view hidden">
+                <span>OUTPUT</span>
+                <button id="closeTerminal" className="close-button" onClick={closeTerminal}>&#10005;</button>
+                <p></p>
+            </div>
         </div>
         </>
     );
