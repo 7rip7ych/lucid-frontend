@@ -5,8 +5,7 @@ import { io } from "socket.io-client";
 
 const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/";
 
-
-function Editor(props) {
+function TextEditor(props) {
     const navigate = useNavigate();
     const [editorTitle, setEditorTitle] = useState("");
     const [editorContent, setEditorContent] = useState("");
@@ -22,7 +21,8 @@ function Editor(props) {
     async function createDoc() {
         let newDoc = {
             "title": document.getElementById("titleeditor").value,
-            "content": document.getElementById("contenteditor").value
+            "content": document.getElementById("contenteditor").value,
+            "type": "text"
         };
         const result = await documents.addOneDoc(newDoc);
 
@@ -34,7 +34,8 @@ function Editor(props) {
         let updatedDoc = {
             "id": props.doc._id,
             "title": document.getElementById("titleeditor").value,
-            "content": document.getElementById("contenteditor").value
+            "content": document.getElementById("contenteditor").value,
+            "type": "text"
         };
 
         await documents.updateOneDoc(updatedDoc);
@@ -103,14 +104,15 @@ function Editor(props) {
             socket.current.emit("content", {
                 id: props.doc._id,
                 title: document.getElementById("titleeditor").value,
-                content: document.getElementById("contenteditor").value
+                content: document.getElementById("contenteditor").value,
+                type: props.doc.type
             });
         });
 
         return () => {
             socket.current.disconnect();
         }
-    }, [props.doc._id]);
+    }, [props.doc._id, props.doc.type]);
 
     return (
         <>
@@ -136,4 +138,4 @@ function Editor(props) {
     );
 };
 
-export default Editor;
+export default TextEditor;
