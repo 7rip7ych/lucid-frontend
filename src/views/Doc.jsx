@@ -1,6 +1,9 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useState, useEffect} from "react";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
+
 import Header from './components/Header';
 import Footer from './components/Footer';
 import imgUrl from '../assets/skateboard.gif';
@@ -8,11 +11,15 @@ import documents from './models/docs';
 import TextEditor from './components/TextEditor';
 import CodeEditor from './components/CodeEditor';
 
+const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/";
+
 function Doc() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [docu, setDoc] = useState([]);
     const [load, setLoading] = useState(<img src={imgUrl} alt="loading" className="loading-gif" />);
     const [editor, setEditor] = useState(<TextEditor />);
+    const [type, setType] = useState("text");
 
     useEffect(() => {
         const loadData = async () => {
@@ -27,10 +34,50 @@ function Doc() {
     function changeEditor(e) {
         if (e.target.checked) {
             setEditor(<CodeEditor />);
+            setType("code");
         } else {
             setEditor(<TextEditor />);
+            setType("text");
         }
     }
+
+    const actions = {
+        create: async function createDoc() {
+            let newDoc = {
+                "title": document.getElementById("titleeditor").value,
+                "content": document.getElementById("contenteditor").value,
+                "type": type
+            };
+            const result = await documents.addOneDoc(newDoc);
+
+            navigate(`/lucid-frontend/${result.insertedId}`); // Redirect to new id
+        },
+        update: async function updateDoc() {
+            let updatedDoc = {
+                "id": docu._id,
+                "title": document.getElementById("titleeditor").value,
+                "content": document.getElementById("contenteditor").value,
+                "type": type
+            };
+
+            await documents.updateOneDoc(updatedDoc);
+            
+            // Show success
+            if (type == "text") {
+                const updateBtn = document.getElementById("update");
+                updateBtn.classList.add("success-animation");
+                setTimeout(() => updateBtn.classList.remove("success-animation"), 1000);
+            }
+        },
+        delete: async function deleteDoc() {
+            if (docu._id) {
+                await documents.deleteOneDoc(docu._id);
+            }
+            
+            navigate("/lucid-frontend/");  // Redirect to home
+        }
+    }
+
 
     return (
         <>
@@ -46,7 +93,7 @@ function Doc() {
                 <span>Code Editor</span>
             </div>
             {load}
-            {React.cloneElement(editor, {doc: docu})}
+            {React.cloneElement(editor, { doc: docu, actions: actions })}
         </main>
         <Footer />
         </>

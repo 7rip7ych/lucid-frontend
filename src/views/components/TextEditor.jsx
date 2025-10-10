@@ -1,12 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import documents from "../models/docs";
-import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
 const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/";
 
 function TextEditor(props) {
-    const navigate = useNavigate();
     const [editorTitle, setEditorTitle] = useState("");
     const [editorContent, setEditorContent] = useState("");
 
@@ -16,44 +13,6 @@ function TextEditor(props) {
         setEditorContent(props.doc.content);
     }, [props.doc]);
 
-    
-    // Create new doc
-    async function createDoc() {
-        let newDoc = {
-            "title": document.getElementById("titleeditor").value,
-            "content": document.getElementById("contenteditor").value,
-            "type": "text"
-        };
-        const result = await documents.addOneDoc(newDoc);
-
-        navigate(`/lucid-frontend/${result.insertedId}`); // Redirect to new id
-    }
-
-    // Update document
-    async function updateDoc() {
-        let updatedDoc = {
-            "id": props.doc._id,
-            "title": document.getElementById("titleeditor").value,
-            "content": document.getElementById("contenteditor").value,
-            "type": "text"
-        };
-
-        await documents.updateOneDoc(updatedDoc);
-        
-        // Show success
-        const updateBtn = document.getElementById("update");
-        updateBtn.classList.add("success-animation");
-        setTimeout(() => updateBtn.classList.remove("success-animation"), 1000);
-    }
-
-    // Delete the document
-    async function deleteDoc() {
-        if (props.doc._id) {
-            await documents.deleteOneDoc(props.doc._id);
-        }
-        
-        navigate("/lucid-frontend/");  // Redirect to home
-    }
 
     // Handle a submission of the form
     async function handleSubmit(e) {
@@ -61,13 +20,13 @@ function TextEditor(props) {
 
         switch (e.nativeEvent.submitter.value) {
             case "Skapa":
-                await createDoc();
+                await props.actions.create();
                 break;
             case "Uppdatera":
-                await updateDoc();
+                await props.actions.update();
                 break;
             case "Radera":
-                await deleteDoc();
+                await props.actions.delete();
                 break;
             default:
         }
