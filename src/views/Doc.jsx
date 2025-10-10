@@ -20,6 +20,16 @@ function Doc() {
     const [load, setLoading] = useState(<img src={imgUrl} alt="loading" className="loading-gif" />);
     const [editor, setEditor] = useState(<TextEditor />);
     const [type, setType] = useState("text");
+    const [editorTitle, setEditorTitle] = useState("");
+    const [editorContent, setEditorContent] = useState("");
+
+    // set initial variables
+    useEffect(() => {
+        if (docu) {
+            setEditorTitle(docu.title);
+            setEditorContent(docu.content);
+        }
+    }, [docu]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -78,6 +88,43 @@ function Doc() {
         }
     }
 
+    // set content on change
+    useEffect(() => {
+        if (typeof editorContent !== "undefined" && typeof editorTitle !== "undefined") {
+            document.getElementById("titleeditor").value = editorTitle;
+            document.getElementById("contenteditor").value = editorContent;
+        }
+        
+    }, [editorTitle, editorContent]);
+
+    // socket
+    const socket = useRef(null);
+
+    useEffect(() => {
+        if (!docu._id) {
+            return;
+        }
+
+        socket.current = io(SERVER_URL);
+
+        socket.current.emit("create", docu._id);
+
+        socket.current.on("content", (data) => {
+            setEditorTitle(data.title);
+            
+            setEditorContent(data.content);
+            
+        });
+
+        return () => {
+            socket.current.disconnect();
+        }
+    }, [docu._id]);
+
+    useEffect(() => {
+        
+    })
+    
 
     return (
         <>
@@ -93,7 +140,7 @@ function Doc() {
                 <span>Code Editor</span>
             </div>
             {load}
-            {React.cloneElement(editor, { doc: docu, actions: actions })}
+            {React.cloneElement(editor, { doc: docu, actions: actions, socket: socket })}
         </main>
         <Footer />
         </>

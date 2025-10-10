@@ -1,18 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { io } from "socket.io-client";
-
-const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/";
 
 function TextEditor(props) {
-    const [editorTitle, setEditorTitle] = useState("");
-    const [editorContent, setEditorContent] = useState("");
-
-    // set initial variables
-    useEffect(() => {
-        setEditorTitle(props.doc.title)
-        setEditorContent(props.doc.content);
-    }, [props.doc]);
-
 
     // Handle a submission of the form
     async function handleSubmit(e) {
@@ -33,58 +20,30 @@ function TextEditor(props) {
     }
 
 
-    // set content on change
-    useEffect(() => {
-        if (typeof editorContent !== "undefined" && typeof editorTitle !== "undefined") {
-            document.getElementById("titleeditor").value = editorTitle;
-            document.getElementById("contenteditor").value = editorContent;
-        }
-        
-    }, [editorTitle, editorContent]);
-
-    // socket
-    const socket = useRef(null);
-
-    useEffect(() => {
-        if (!props.doc._id) {
-            return;
-        }
-
-        socket.current = io(SERVER_URL);
-
-        socket.current.emit("create", props.doc._id);
-
-        socket.current.on("content", (data) => {
-            setEditorTitle(data.title);
-            setEditorContent(data.content);
-        });
-
-        document.getElementById("texteditor").addEventListener("keyup", function() {
-            socket.current.emit("content", {
+    function handleChange() {
+        console.log("change");
+        if (props.socket.current) {
+            props.socket.current.emit("content", {
                 id: props.doc._id,
                 title: document.getElementById("titleeditor").value,
                 content: document.getElementById("contenteditor").value,
-                type: props.doc.type
+                type: "text"
             });
-        });
-
-        return () => {
-            socket.current.disconnect();
         }
-    }, [props.doc._id, props.doc.type]);
+    };
 
     return (
         <>
-        <div className="editor">
+        <div className="texteditor">
             <form onSubmit={handleSubmit} id="texteditor" className="editor-form new-doc">
                 <label htmlFor="id">Id</label>
                 <input type="text" name="id" className="subtitle readonly" defaultValue={props.doc._id} readOnly/>
 
                 <label htmlFor="title">Titel</label>
-                <input type="text" id="titleeditor" name="title" className="title" defaultValue={props.doc.title} />
+                <input type="text" id="titleeditor" name="title" className="title" defaultValue={props.doc.title} onKeyUp={handleChange} />
 
                 <label htmlFor="content">Innehåll</label>
-                <textarea id="contenteditor" name="content" className="content" defaultValue={props.doc.content} rows="6" autoFocus></textarea>
+                <textarea id="contenteditor" name="content" className="content" defaultValue={props.doc.content} rows="6" autoFocus onKeyUp={handleChange} ></textarea>
                 
                 <div className="inline-buttons">
                     <input type="submit" id="create" value="Skapa" />

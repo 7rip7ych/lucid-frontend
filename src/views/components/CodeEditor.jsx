@@ -2,7 +2,6 @@ import { useRef } from "react";
 import Editor from "@monaco-editor/react";
 import { useState } from "react";
 import { useEffect } from "react";
-import documents from "../models/docs";
 
 const execjs_url = "https://execjs.emilfolino.se/code";
 
@@ -13,17 +12,6 @@ function CodeEditor(props) {
 
     function handleEditorMount(editor) {
         editorRef.current = editor;
-    }
-
-    async function saveCode() {
-        var data = {
-            "id": props.doc._id,
-            "title": document.getElementById("titleeditor").value,
-            "content": editorRef.current.getValue(),
-            "type": "code"
-        }
-        
-        await documents.updateOneDoc(data);
     }
 
     async function executeCode() {
@@ -69,15 +57,25 @@ function CodeEditor(props) {
         
     }, [props.doc]);
 
+    function handleChange() {
+        console.log("change");
+        props.socket.current.emit("content", {
+            id: props.doc._id,
+            title: document.getElementById("titleeditor").value,
+            content: editorRef.current.getValue(),
+            type: "code"
+        });
+    };
+
     return (
         <>
-        <div className="code-editor">
+        <div id="codeeditor" className="code-editor">
             <div className="inline-buttons">
-                <button className="blue-button" onClick={saveCode}>Save</button>
+                <button className="blue-button" onClick={props.actions.update}>Save</button>
                 <button className="blue-button" onClick={executeCode}>Execute</button>
             </div>
             <div className="code-title">
-                <input type="text" id="titleeditor" className="title" defaultValue={props.doc.title} />
+                <input type="text" id="titleeditor" className="title" defaultValue={props.doc.title} onKeyUp={handleChange} />
             </div>
             <Editor 
                 height="80vh"
@@ -86,6 +84,7 @@ function CodeEditor(props) {
                 defaultValue={content}
                 onMount={handleEditorMount}
                 id="contenteditor"
+                onChange={handleChange}
             />
             <div id="terminalView" className="terminal-view hidden">
                 <span>OUTPUT</span>
