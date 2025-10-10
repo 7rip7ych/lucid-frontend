@@ -18,7 +18,7 @@ function CodeEditor(props) {
     async function saveCode() {
         var data = {
             "id": props.doc._id,
-            "title": document.getElementById("codeTitle").value,
+            "title": document.getElementById("titleeditor").value,
             "content": editorRef.current.getValue(),
             "type": "code"
         }
@@ -77,7 +77,7 @@ function CodeEditor(props) {
                 <button className="blue-button" onClick={executeCode}>Execute</button>
             </div>
             <div className="code-title">
-                <input type="text" id="codeTitle" className="title" defaultValue={props.doc.title} />
+                <input type="text" id="titleeditor" className="title" defaultValue={props.doc.title} />
             </div>
             <Editor 
                 height="80vh"
@@ -85,6 +85,7 @@ function CodeEditor(props) {
                 defaultLanguage="javascript"
                 defaultValue={content}
                 onMount={handleEditorMount}
+                id="contenteditor"
             />
             <div id="terminalView" className="terminal-view hidden">
                 <span>OUTPUT</span>
