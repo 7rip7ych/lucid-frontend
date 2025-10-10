@@ -1,5 +1,11 @@
+import { useRef, useEffect } from "react";
 
 function TextEditor(props) {
+    const editorRef = useRef(null);
+
+    useEffect(() => {
+        editorRef.current = document.getElementById("texteditor");
+    }, []);
 
     // Handle a submission of the form
     async function handleSubmit(e) {
@@ -19,7 +25,6 @@ function TextEditor(props) {
         }
     }
 
-
     function handleChange() {
         console.log("change");
         if (props.socket.current) {
@@ -31,6 +36,15 @@ function TextEditor(props) {
             });
         }
     };
+
+    // set content on change
+    useEffect(() => {
+        if (editorRef.current && typeof props.content !== "undefined" && typeof props.title !== "undefined") {
+            document.getElementById("titleeditor").value = props.title;
+            document.getElementById("contenteditor").value = props.content;
+        }
+        
+    }, [props.title, props.content]);
 
     return (
         <>

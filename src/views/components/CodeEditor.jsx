@@ -1,7 +1,5 @@
-import { useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import Editor from "@monaco-editor/react";
-import { useState } from "react";
-import { useEffect } from "react";
 
 const execjs_url = "https://execjs.emilfolino.se/code";
 
@@ -66,6 +64,15 @@ function CodeEditor(props) {
             type: "code"
         });
     };
+
+    // set content on change
+    useEffect(() => {
+        if (editorRef.current && typeof props.content !== "undefined" && typeof props.title !== "undefined") {
+            document.getElementById("titleeditor").value = props.title;
+            editorRef.current.setValue(props.content);
+        }
+        
+    }, [props.title, props.content]);
 
     return (
         <>

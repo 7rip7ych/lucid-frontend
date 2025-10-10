@@ -88,14 +88,6 @@ function Doc() {
         }
     }
 
-    // set content on change
-    useEffect(() => {
-        if (typeof editorContent !== "undefined" && typeof editorTitle !== "undefined") {
-            document.getElementById("titleeditor").value = editorTitle;
-            document.getElementById("contenteditor").value = editorContent;
-        }
-        
-    }, [editorTitle, editorContent]);
 
     // socket
     const socket = useRef(null);
@@ -140,7 +132,7 @@ function Doc() {
                 <span>Code Editor</span>
             </div>
             {load}
-            {React.cloneElement(editor, { doc: docu, actions: actions, socket: socket })}
+            {React.cloneElement(editor, { doc: docu, actions: actions, socket: socket, title: editorTitle, content: editorContent })}
         </main>
         <Footer />
         </>
