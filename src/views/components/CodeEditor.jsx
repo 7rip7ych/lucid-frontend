@@ -51,6 +51,10 @@ function CodeEditor(props) {
         props.actions.handleChange(editorRef.current.getValue());
     };
 
+    document.getElementById("titleeditor").oninput = (e) => {
+        e.target.size = e.target.value.length;
+    }
+
     // set content on change
     useEffect(() => {
         if (editorRef.current && typeof props.data.content !== "undefined" && typeof props.data.title !== "undefined") {
@@ -73,7 +77,7 @@ function CodeEditor(props) {
                 <button className="blue-button" onClick={executeCode}>Execute</button>
             </div>
             <div className="code-title">
-                <input type="text" id="titleeditor" className="title" defaultValue={props.data.title} />
+                <input type="text" id="titleeditor" className="title" defaultValue={props.data.title} size={props.data.title.length} />
             </div>
             <Editor 
                 height="80vh"
