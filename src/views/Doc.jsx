@@ -1,7 +1,6 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
 import Header from './components/Header';
