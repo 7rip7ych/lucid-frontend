@@ -16,32 +16,31 @@ const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope
 function Doc() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [docu, setDoc] = useState([]);
     const [load, setLoading] = useState(<img src={imgUrl} alt="loading" className="loading-gif" />);
     const [editor, setEditor] = useState(<TextEditor />);
     const [type, setType] = useState("text");
-    const [editorTitle, setEditorTitle] = useState("");
-    const [editorContent, setEditorContent] = useState("");
-
-    // set initial variables
-    useEffect(() => {
-        if (docu) {
-            setEditorTitle(docu.title);
-            setEditorContent(docu.content);
-        }
-    }, [docu]);
+    const [data, setData] = useState("");
+    const [temp, setTemp] = useState("");
 
     useEffect(() => {
         const loadData = async () => {
-            const DocData = await documents.getOneDoc(id);
-            setDoc(DocData);
+            const docData = await documents.getOneDoc(id);
+            // Rename _id
+            docData["id"] = docData["_id"];
+            delete docData["_id"];
+            setData(docData);
+            setTemp(docData);
             setLoading();
         };
 
         loadData();
-    }, [id, editor]);
+    }, [id]);
 
     function changeEditor(e) {
+        // Make local changes transfer between editors
+        if (temp !== data) {
+            setData(temp);
+        }
         if (e.target.checked) {
             setEditor(<CodeEditor />);
             setType("code");
@@ -52,26 +51,27 @@ function Doc() {
     }
 
     const actions = {
-        create: async function createDoc() {
+        create: async function createDoc(content=document.getElementById("contenteditor").value) {
             let newDoc = {
                 "title": document.getElementById("titleeditor").value,
-                "content": document.getElementById("contenteditor").value,
+                "content": content,
                 "type": type
             };
             const result = await documents.addOneDoc(newDoc);
 
             navigate(`/lucid-frontend/${result.insertedId}`); // Redirect to new id
         },
-        update: async function updateDoc() {
+        update: async function updateDoc(content=document.getElementById("contenteditor").value) {
             let updatedDoc = {
-                "id": docu._id,
+                "id": data.id,
                 "title": document.getElementById("titleeditor").value,
-                "content": document.getElementById("contenteditor").value,
+                "content": content,
                 "type": type
             };
 
             await documents.updateOneDoc(updatedDoc);
-            
+            setData(updatedDoc);
+            setTemp(updatedDoc);
             // Show success
             if (type == "text") {
                 const updateBtn = document.getElementById("update");
@@ -80,11 +80,23 @@ function Doc() {
             }
         },
         delete: async function deleteDoc() {
-            if (docu._id) {
-                await documents.deleteOneDoc(docu._id);
+            if (data.id) {
+                await documents.deleteOneDoc(data.id);
             }
             
             navigate("/lucid-frontend/");  // Redirect to home
+        },
+        handleChange: function handleChange(content) {
+            if (socket.current) {
+                var obj = {
+                    id: data.id,
+                    title: document.getElementById("titleeditor").value,
+                    content: content,
+                    type: type
+                };
+                socket.current.emit("content", obj);
+                setTemp(obj);
+            }
         }
     }
 
@@ -93,30 +105,23 @@ function Doc() {
     const socket = useRef(null);
 
     useEffect(() => {
-        if (!docu._id) {
+        if (!id) {
             return;
         }
 
         socket.current = io(SERVER_URL);
 
-        socket.current.emit("create", docu._id);
+        socket.current.emit("create", id);
 
-        socket.current.on("content", (data) => {
-            setEditorTitle(data.title);
-            
-            setEditorContent(data.content);
-            
+        socket.current.on("content", (newData) => {
+            setData(newData);
+            setTemp(newData);
         });
 
         return () => {
             socket.current.disconnect();
         }
-    }, [docu._id]);
-
-    useEffect(() => {
-        
-    })
-    
+    }, [id]);
 
     return (
         <>
@@ -132,7 +137,7 @@ function Doc() {
                 <span>Code Editor</span>
             </div>
             {load}
-            {React.cloneElement(editor, { doc: docu, actions: actions, socket: socket, title: editorTitle, content: editorContent })}
+            {React.cloneElement(editor, { data: data, actions: actions })}
         </main>
         <Footer />
         </>

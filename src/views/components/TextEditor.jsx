@@ -26,38 +26,30 @@ function TextEditor(props) {
     }
 
     function handleChange() {
-        console.log("change");
-        if (props.socket.current) {
-            props.socket.current.emit("content", {
-                id: props.doc._id,
-                title: document.getElementById("titleeditor").value,
-                content: document.getElementById("contenteditor").value,
-                type: "text"
-            });
-        }
+        props.actions.handleChange(document.getElementById("contenteditor").value);
     };
 
     // set content on change
     useEffect(() => {
-        if (editorRef.current && typeof props.content !== "undefined" && typeof props.title !== "undefined") {
-            document.getElementById("titleeditor").value = props.title;
-            document.getElementById("contenteditor").value = props.content;
+        if (editorRef.current && typeof props.data.content !== "undefined" && typeof props.data.title !== "undefined") {
+            document.getElementById("titleeditor").value = props.data.title;
+            document.getElementById("contenteditor").value = props.data.content;
         }
         
-    }, [props.title, props.content]);
+    }, [props.data]);
 
     return (
         <>
         <div className="texteditor">
             <form onSubmit={handleSubmit} id="texteditor" className="editor-form new-doc">
                 <label htmlFor="id">Id</label>
-                <input type="text" name="id" className="subtitle readonly" defaultValue={props.doc._id} readOnly/>
+                <input type="text" name="id" className="subtitle readonly" defaultValue={props.data.id} readOnly/>
 
                 <label htmlFor="title">Titel</label>
-                <input type="text" id="titleeditor" name="title" className="title" defaultValue={props.doc.title} onKeyUp={handleChange} />
+                <input type="text" id="titleeditor" name="title" className="title" defaultValue={props.data.title} onKeyUp={handleChange} />
 
                 <label htmlFor="content">Innehåll</label>
-                <textarea id="contenteditor" name="content" className="content" defaultValue={props.doc.content} rows="6" autoFocus onKeyUp={handleChange} ></textarea>
+                <textarea id="contenteditor" name="content" className="content" defaultValue={props.data.content} rows="6" autoFocus onKeyUp={handleChange} ></textarea>
                 
                 <div className="inline-buttons">
                     <input type="submit" id="create" value="Skapa" />
