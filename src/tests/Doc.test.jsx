@@ -51,11 +51,23 @@ describe('Doc', () => {
             expect(screen.getByRole('button', { name: 'Uppdatera' })).toBeInTheDocument();
             expect(screen.getByRole('button', { name: 'Radera' })).toBeInTheDocument();
         });
+
+        test('Test if editor switch is rendered', () => {
+            render(
+                <MemoryRouter>
+                    <Doc />
+                </MemoryRouter>
+            );
+
+            expect(screen.getByText('Text Editor')).toBeInTheDocument();
+            expect(screen.getByText('Code Editor')).toBeInTheDocument();
+            expect(screen.getByRole('checkbox', { id: 'changeEditor' })).toBeInTheDocument();
+        });
     });
 
-    describe('Sockets', () => {});
-
     describe('Data', () => {});
+
+    describe('Sockets', () => {});
 
     describe('Editor', () => {});
 });
