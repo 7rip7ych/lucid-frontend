@@ -1,8 +1,8 @@
 import Doc from '../views/Doc';
 import { render, screen } from '@testing-library/react';
 import { describe, test, expect } from 'vitest';
-import { MemoryRouter } from "react-router-dom";
-
+import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { userEvent } from "@testing-library/user-event";
 
 describe('Doc', () => {
     describe('DOM', () => {
@@ -65,9 +65,16 @@ describe('Doc', () => {
         });
     });
 
-    describe('Data', () => {});
-
-    describe('Sockets', () => {});
-
-    describe('Editor', () => {});
+    describe('Editor', () => {
+        test('Test that user can switch between editors', async () => {
+            render(
+                <MemoryRouter initialEntries={['/lucid-frontend/68e107aa975f8d1dc4d36ab4']}>
+                    <Doc />
+                </MemoryRouter>
+            )
+            expect(screen.getAllByRole('textbox')).toHaveLength(3);
+            await userEvent.click(document.querySelector('#changeEditor'));
+            expect(screen.getAllByRole('textbox')).toHaveLength(1);
+        })
+    });
 });
