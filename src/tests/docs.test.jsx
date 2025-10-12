@@ -45,9 +45,9 @@ describe('Testing documents functions:', async() => {
 
     const deletedDoc = await documents.deleteOneDoc(lastId);
     
-    test('deleteOneDoc deletes one document', () => {
+    test('deleteOneDoc deletes one document', async() => {
         expect(deletedDoc.deletedCount).toBe(1);
-        expect(async() => documents.getOneDoc(lastId)).rejects.toThrowError('Unexpected end of JSON input');
+        await expect(async() => await documents.getOneDoc(lastId)).rejects.toThrowError('Unexpected end of JSON input');
     });
     
     // No test for delete all function to preserve the documents
