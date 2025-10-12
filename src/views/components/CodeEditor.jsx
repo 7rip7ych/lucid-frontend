@@ -8,6 +8,11 @@ function CodeEditor(props) {
 
     function handleEditorMount(editor) {
         editorRef.current = editor;
+        
+        document.getElementById("titleeditor").oninput = (e) => {
+            e.target.size = e.target.value.length;
+        };
+
         if (props.data.type && props.data.type == "code") {
             editorRef.current.setValue(props.data.content);
         } else {
@@ -51,9 +56,6 @@ function CodeEditor(props) {
         props.actions.handleChange(editorRef.current.getValue());
     };
 
-    document.getElementById("titleeditor").oninput = (e) => {
-        e.target.size = e.target.value.length;
-    }
 
     // set content on change
     useEffect(() => {
@@ -77,7 +79,7 @@ function CodeEditor(props) {
                 <button className="blue-button" onClick={executeCode}>Execute</button>
             </div>
             <div className="code-title">
-                <input type="text" id="titleeditor" className="title" defaultValue={props.data.title} size={props.data.title.length} />
+                <input type="text" id="titleeditor" className="title" defaultValue={props.data.title} size={props?.data?.title?.length} />
             </div>
             <Editor 
                 height="80vh"
