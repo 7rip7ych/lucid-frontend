@@ -49,6 +49,24 @@ function Doc() {
         }
     }
 
+    function newComment() {
+        // highlight text
+        // open textbox
+        document.querySelector(".comment-form").style.display = "block";
+    }
+
+    function addComment() {
+        const comment = document.getElementById('commentText')
+        // get selected text
+        // call function
+        // update
+        closeComment();
+    }
+
+    function closeComment() {
+        document.querySelector(".comment-form").style.display = "none";
+    }
+
     const actions = {
         create: async function createDoc(content=document.getElementById("contenteditor").value) {
             let newDoc = {
@@ -125,19 +143,31 @@ function Doc() {
     return (
         <>
         <Header />
-        <main className="main">
-            <h2>Dokument</h2>
-            <div className="toggle-container">
-                <span>Text Editor</span>
-                <label className="switch">
-                    <input type="checkbox" id="changeEditor" className="toggle-checkbox change-editor" onClick={changeEditor} />
-                    <span className="slider round"></span>
-                </label>
-                <span>Code Editor</span>
-            </div>
-            {load}
-            {React.cloneElement(editor, { data: data, actions: actions })}
-        </main>
+        <div className="wrap">
+            <main className="main">
+                <h2>Dokument</h2>
+                <div className="toggle-container">
+                    <span>Text Editor</span>
+                    <label className="switch">
+                        <input type="checkbox" id="changeEditor" className="toggle-checkbox change-editor" onClick={changeEditor} />
+                        <span className="slider round"></span>
+                    </label>
+                    <span>Code Editor</span>
+                </div>
+                {load}
+                {React.cloneElement(editor, { data: data, actions: actions })}
+            </main>
+            <aside className="aside">
+                <button className="comment-button" id="newComment" onClick={newComment}>Comment</button>
+                <form className='comment-form' style={{display: 'none'}}>
+                    <button className='close-button' onClick={closeComment}>&#10005;</button>
+                    <textarea className='comment-text' id='commentText' rows="3" autoFocus></textarea>
+                    <input type='submit' value='Comment' onClick={addComment} />
+                </form>
+                <div className="comment-section" id="commentSection"></div>
+            </aside>
+        </div>
+        
         <Footer />
         </>
     );
