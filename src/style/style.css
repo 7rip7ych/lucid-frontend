@@ -370,7 +370,7 @@ header a:hover {
 .comment-form {
     display: block;
     position: relative;
-    padding: 2rem 1rem 0;
+    padding: 2rem 1rem 1rem;
     border: 1px solid #ccc;
     margin: 1rem  0;
 }
@@ -380,10 +380,14 @@ header a:hover {
     top: 0px;
 }
 
-.comment-form input[type=submit] {
+.comment-form .enter {
     padding: 0.2rem 0.5rem;
 }
 
 .comment-form textarea {
     width: 100%;
+}
+
+::highlight(selected-text) {
+    background-color: peachpuff;
 }
