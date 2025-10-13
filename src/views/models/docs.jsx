@@ -50,6 +50,10 @@ const documents = {
         const result = await response.json();
 
         return result;
+    },
+    addComment: async function addComment(id, comment, selection) {
+        // add comment on selection for doc with id
+        console.log(id, comment, selection);
     }
 };
 
