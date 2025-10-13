@@ -358,3 +358,32 @@ header a:hover {
     text-wrap: wrap;
     height: 90%;
 }
+
+.comment-section {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: auto;
+    width: 100%;
+}
+
+.comment-form {
+    display: block;
+    position: relative;
+    padding: 2rem 1rem 0;
+    border: 1px solid #ccc;
+    margin: 1rem  0;
+}
+
+.comment-form .close-button {
+    color: #020202;
+    top: 0px;
+}
+
+.comment-form input[type=submit] {
+    padding: 0.2rem 0.5rem;
+}
+
+.comment-form textarea {
+    width: 100%;
+}
