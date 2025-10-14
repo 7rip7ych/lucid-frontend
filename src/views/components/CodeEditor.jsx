@@ -15,7 +15,9 @@ function CodeEditor(props) {
 
         document.addEventListener("selectionchange", () => {
             var sel = editorRef.current.getSelection();
-            props.actions.select([sel.startColumn, editorRef.current.getModel().getValueInRange(sel)]);
+            if (sel) {
+                props.actions.select([sel.startColumn, editorRef.current.getModel().getValueInRange(sel)]);
+            }
         });
 
         if (props.data.type && props.data.type == "code") {
