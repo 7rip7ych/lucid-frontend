@@ -13,6 +13,11 @@ function CodeEditor(props) {
             e.target.size = e.target.value.length;
         };
 
+        document.addEventListener("selectionchange", () => {
+            var sel = editorRef.current.getSelection();
+            props.actions.select([sel.startColumn, editorRef.current.getModel().getValueInRange(sel)]);
+        });
+
         if (props.data.type && props.data.type == "code") {
             editorRef.current.setValue(props.data.content);
         } else {
@@ -20,6 +25,7 @@ function CodeEditor(props) {
             editorRef.current.setValue("// " + txt.replaceAll("\n", "\n// "));
         }
     }
+
     function saveCode() {
         props.actions.update(editorRef.current.getValue());
     }
