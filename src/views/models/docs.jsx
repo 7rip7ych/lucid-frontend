@@ -135,6 +135,7 @@ const documents = {
                     _id
                     title
                 }
+                selection
             }
         }
         `;
