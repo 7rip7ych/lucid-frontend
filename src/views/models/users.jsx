@@ -1,7 +1,7 @@
 import auth from './auth.jsx';
 
-// const server = 'https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/';
-const server = 'http://localhost:1337/';
+const server = 'https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/';
+// const server = 'http://localhost:1337/';
 
 const users = {
     allUsers: async function allUsers() {
