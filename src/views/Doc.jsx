@@ -54,7 +54,7 @@ function Doc() {
         document.getElementById("selectionDisplay").innerText = selection[1];
     }, [selection]);
 
-    
+
     function newComment() {
         // highlight text
         document.querySelector(".comment-form").style.display = "block";
@@ -166,14 +166,25 @@ function Doc() {
                 {React.cloneElement(editor, { data: data, actions: actions })}
             </main>
             <aside className="aside">
-                <button className="comment-button" id="newComment" onClick={newComment}>Comment</button>
+                <button className="blue-button comment-button" id="newComment" onClick={newComment}>Comment</button>
                 <p id="selectionDisplay"></p>
                 <form className='comment-form' style={{display: 'none'}} onSubmit={() => {return false}}>
                     <button className='close-button' onClick={closeComment}>&#10005;</button>
                     <textarea className='comment-text' id='commentText' rows="2" autoFocus></textarea>
                     <button className="enter" onClick={addComment}>Comment</button>
                 </form>
-                <div className="comment-section" id="commentSection"></div>
+                <div className="comment-section" id="commentSection">
+                    <div className='comment'>
+                        <span className='byline'>7rip7ych</span>
+                        <p>comment contents bla bla bla</p>
+                        <button className='delete-button'>Delete</button>
+                    </div>
+                    <div className='comment'>
+                        <span className='byline'>7rip7ych</span>
+                        <p>comment contents bla bla bla</p>
+                        <button className='delete-button'>Delete</button>
+                    </div>
+                </div>
             </aside>
         </div>
         
