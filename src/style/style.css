@@ -49,6 +49,10 @@ header {
     padding: 1.4rem 3rem;
 }
 
+button {
+    cursor: pointer;
+}
+
 main {
     width: 96%;
     max-width: 64rem;
@@ -363,16 +367,19 @@ header a:hover {
     display: flex;
     flex-direction: column;
     height: 100%;
-    overflow: auto;
     width: 100%;
+    gap: 1rem;
 }
 
 .comment-form {
     display: block;
     position: relative;
-    padding: 2rem 1rem 1rem;
-    border: 1px solid #ccc;
+    padding: 2rem 0.8rem 1rem;
+    border: 1px solid #0000005c;
     margin: 1rem  0;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px #0000008a;
+    text-align: right;
 }
 
 .comment-form .close-button {
@@ -381,13 +388,39 @@ header a:hover {
 }
 
 .comment-form .enter {
-    padding: 0.2rem 0.5rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 50px;
+    background: #fbfbfb;
+    font-size: 0.9rem;
+    box-shadow: 0 0px 8px #0003;
+    border: 1px solid #0000001c;
+    color: #0064ff;
 }
 
-.comment-form textarea {
+.comment-form .enter:active {
+    background: #a4a4a4;
+}
+
+.comment-form .enter:hover {
+    background: #fffdfd;
+    box-shadow: 0 0 10px #00000052;
+    border: 1px solid #fff;
+}
+
+.comment-form .comment-text {
     width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 15px;
+    border-width: 1px;
 }
 
-::highlight(selected-text) {
-    background-color: peachpuff;
+.comment {
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 1rem;
+    box-shadow: 0 0 5px #00000036;
+}
+
+.comment .byline {
+    display: block;
 }
