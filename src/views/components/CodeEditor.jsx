@@ -1,29 +1,22 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Editor from "@monaco-editor/react";
-import { useState } from "react";
-import { useEffect } from "react";
-import documents from "../models/docs";
 
 const execjs_url = "https://execjs.emilfolino.se/code";
 
 function CodeEditor(props) {
-    const [content, setContent] = useState("");
     const editorRef = useRef(null);
-    const docRef = useRef(null);
 
     function handleEditorMount(editor) {
         editorRef.current = editor;
-    }
-
-    async function saveCode() {
-        var data = {
-            "id": props.doc._id,
-            "title": document.getElementById("codeTitle").value,
-            "content": editorRef.current.getValue(),
-            "type": "code"
+        if (props.data.type && props.data.type == "code") {
+            editorRef.current.setValue(props.data.content);
+        } else {
+            let txt = props.data.content.replaceAll("// ", "")
+            editorRef.current.setValue("// " + txt.replaceAll("\n", "\n// "));
         }
-        
-        await documents.updateOneDoc(data);
+    }
+    function saveCode() {
+        props.actions.update(editorRef.current.getValue());
     }
 
     async function executeCode() {
@@ -54,37 +47,45 @@ function CodeEditor(props) {
         e.target.parentNode.classList.add("hidden");
     }
 
+    function handleChange() {
+        props.actions.handleChange(editorRef.current.getValue());
+    };
+
+    document.getElementById("titleeditor").oninput = (e) => {
+        e.target.size = e.target.value.length;
+    }
+
+    // set content on change
     useEffect(() => {
-        // get and format content
-        if (props.doc._id) {
-            docRef.current = props.doc;
-        } else {
-            return;
+        if (editorRef.current && typeof props.data.content !== "undefined" && typeof props.data.title !== "undefined") {
+            document.getElementById("titleeditor").value = props.data.title;
+            // get and format content
+            if (props.data.type && props.data.type == "code") {
+                editorRef.current.setValue(props.data.content);
+            } else {
+                let txt = props.data.content.replaceAll("// ", "")
+                editorRef.current.setValue("// " + txt.replaceAll("\n", "\n// "));
+            }
         }
-        if (docRef.current.type && docRef.current.type == "code") {
-            setContent(docRef.current.content);
-        } else {
-            setContent("// " + docRef.current.content.replaceAll("\n", "\n// "));
-        }
-        
-    }, [props.doc]);
+    }, [props.data]);
 
     return (
         <>
-        <div className="code-editor">
+        <div id="codeeditor" className="code-editor" onKeyUp={handleChange}>
             <div className="inline-buttons">
                 <button className="blue-button" onClick={saveCode}>Save</button>
                 <button className="blue-button" onClick={executeCode}>Execute</button>
             </div>
             <div className="code-title">
-                <input type="text" id="codeTitle" className="title" defaultValue={props.doc.title} />
+                <input type="text" id="titleeditor" className="title" defaultValue={props.data.title} size={props.data.title.length} />
             </div>
             <Editor 
                 height="80vh"
                 theme="vs-dark"
                 defaultLanguage="javascript"
-                defaultValue={content}
+                defaultValue={props.data.content}
                 onMount={handleEditorMount}
+                id="contenteditor"
             />
             <div id="terminalView" className="terminal-view hidden">
                 <span>OUTPUT</span>
