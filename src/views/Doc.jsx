@@ -20,6 +20,7 @@ function Doc() {
     const [type, setType] = useState("text");
     const [data, setData] = useState("");
     const [temp, setTemp] = useState("");
+    const [selection, setSelection] = useState([]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -49,21 +50,27 @@ function Doc() {
         }
     }
 
+    useEffect(() => {
+        document.getElementById("selectionDisplay").innerText = selection[1];
+    }, [selection]);
+
+    
     function newComment() {
         // highlight text
-        // open textbox
         document.querySelector(".comment-form").style.display = "block";
     }
 
-    function addComment() {
-        const comment = document.getElementById('commentText')
-        // get selected text
-        // call function
+    function addComment(e) {
+        e.preventDefault();
+        var comment = document.getElementById('commentText').value;
+        documents.addComment(id, comment, selection);
         // update
-        closeComment();
+        closeComment(e);
     }
 
-    function closeComment() {
+    
+    function closeComment(e) {
+        e.preventDefault();
         document.querySelector(".comment-form").style.display = "none";
     }
 
@@ -114,7 +121,8 @@ function Doc() {
                 socket.current.emit("content", obj);
                 setTemp(obj);
             }
-        }
+        },
+        select: setSelection
     }
 
 
@@ -159,10 +167,11 @@ function Doc() {
             </main>
             <aside className="aside">
                 <button className="comment-button" id="newComment" onClick={newComment}>Comment</button>
-                <form className='comment-form' style={{display: 'none'}}>
+                <p id="selectionDisplay"></p>
+                <form className='comment-form' style={{display: 'none'}} onSubmit={() => {return false}}>
                     <button className='close-button' onClick={closeComment}>&#10005;</button>
-                    <textarea className='comment-text' id='commentText' rows="3" autoFocus></textarea>
-                    <input type='submit' value='Comment' onClick={addComment} />
+                    <textarea className='comment-text' id='commentText' rows="2" autoFocus></textarea>
+                    <button className="enter" onClick={addComment}>Comment</button>
                 </form>
                 <div className="comment-section" id="commentSection"></div>
             </aside>
