@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 
 function Header() {
 
@@ -6,7 +7,14 @@ function Header() {
         <>
 
         <header>
-            <h1><a href="./">SSR Editor</a></h1>
+            <Link to="/lucid-frontend/">
+                <h1>SSR Editor</h1>
+            </Link>
+            <div className="logout" >
+            <Link to="/lucid-frontend/logout">
+                <h3>Logout</h3>
+            </Link>
+            </div>
         </header>
 
         </>
