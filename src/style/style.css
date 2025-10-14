@@ -412,6 +412,7 @@ header a:hover {
     padding: 0.5rem 1rem;
     border-radius: 15px;
     border-width: 1px;
+    resize: vertical;
 }
 
 .comment {
@@ -423,4 +424,20 @@ header a:hover {
 
 .comment .byline {
     display: block;
+    font-weight: 550;
+    font-size: 0.9rem;
+}
+
+.comment p {
+    margin: 0.5rem 0 0.8rem;
+    color: #222;
+}
+
+.comment .delete-button {
+    background-color: transparent;
+    border: 0;
+    color: #db0000;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    padding: 0.2rem;
 }
