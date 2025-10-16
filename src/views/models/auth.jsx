@@ -53,8 +53,8 @@ const auth = {
 
         const result = await response.json();
 
-        if (result.success === true) {
-            console.log(result);
+        if (result.data.message === "User successfully registered.") {
+
             return "ok";
         }
 
@@ -63,6 +63,7 @@ const auth = {
     resetSession: function resetSession () {
         auth.token = null;
         auth.email = null;
+        auth.userId = null;
     },
 };
 
