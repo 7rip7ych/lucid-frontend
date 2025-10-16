@@ -103,8 +103,7 @@ function Doc() {
         }
 
         socket.current.emit("new-comment", comment);
-        
-        // update
+
         closeCommentForm(e);
     }
 
@@ -185,7 +184,6 @@ function Doc() {
 
         // set comments
         socket.current.on("comment", (comments) => {
-            console.log(comments);
             setComments(comments);
         });
 
