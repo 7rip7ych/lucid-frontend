@@ -62,8 +62,15 @@ function Doc() {
 
     function addComment(e) {
         e.preventDefault();
-        var comment = document.getElementById('commentText').value;
-        documents.addComment(id, comment, selection);
+        let comment = {
+            document: id,
+            content: document.getElementById('commentText').value,
+            selection: selection
+        }
+
+        if (socket.current) {
+            socket.current.emit("new-comment", comment);
+        }
         // update
         closeComment(e);
     }
@@ -142,6 +149,8 @@ function Doc() {
             setData(newData);
             setTemp(newData);
         });
+
+        // set comments
 
         return () => {
             socket.current.disconnect();
