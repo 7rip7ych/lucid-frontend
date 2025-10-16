@@ -10,7 +10,8 @@ import documents from './models/docs';
 import TextEditor from './components/TextEditor';
 import CodeEditor from './components/CodeEditor';
 
-const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/";
+// const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/";
+const SERVER_URL = "http://localhost:1337/";
 
 function Doc() {
     const { id } = useParams();
@@ -21,6 +22,7 @@ function Doc() {
     const [data, setData] = useState("");
     const [temp, setTemp] = useState("");
     const [selection, setSelection] = useState([]);
+    const [comments, setComments] = useState([]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -30,6 +32,16 @@ function Doc() {
             delete docData["_id"];
             setData(docData);
             setTemp(docData);
+
+            // set comments
+            let tempComments = [{
+                id: 1,
+                owner: "7rip7ych",
+                content: "comment example text",
+                selection: [1, "/"]
+            }];
+            setComments(tempComments);
+
             setLoading();
         };
 
@@ -51,34 +63,55 @@ function Doc() {
     }
 
     useEffect(() => {
-        document.getElementById("selectionDisplay").innerText = selection[1];
-    }, [selection]);
+        // display comments on page
+        let section = document.getElementById("commentSection");
+        if (!section) { return; }
+        section.innerHTML = "";
+        if (!comments) { return; }
+        comments.forEach((comment) => {
+            let ele = document.createElement("div");
+            ele.className = "comment";
+            ele.id = comment.id;
+            ele.innerHTML = `
+                <span class="byline">${comment.owner}</span>
+                <p>${comment.content}</p>
+                <button class="delete-button">Delete</button>
+            `;
+            section.appendChild(ele);
+        });
+        section.querySelectorAll(".delete-button").forEach(button => button.addEventListener("click", deleteComment))
+    }, [comments]);
 
 
-    function newComment() {
+    function openCommentForm() {
         // highlight text
         document.querySelector(".comment-form").style.display = "block";
+    }
+
+    function closeCommentForm(e) {
+        e.preventDefault();
+        document.querySelector(".comment-form").style.display = "none";
     }
 
     function addComment(e) {
         e.preventDefault();
         let comment = {
-            document: id,
+            owner: null,
+            document: data.id,
             content: document.getElementById('commentText').value,
             selection: selection
         }
 
-        if (socket.current) {
-            socket.current.emit("new-comment", comment);
-        }
+        socket.current.emit("new-comment", comment);
+        
         // update
-        closeComment(e);
+        closeCommentForm(e);
     }
 
-    
-    function closeComment(e) {
+    function deleteComment(e) {
         e.preventDefault();
-        document.querySelector(".comment-form").style.display = "none";
+        socket.current.emit("del-comment", e.target.parentNode.id);
+        e.target.parentNode.remove();
     }
 
     const actions = {
@@ -151,6 +184,10 @@ function Doc() {
         });
 
         // set comments
+        socket.current.on("comment", (comments) => {
+            console.log(comments);
+            setComments(comments);
+        });
 
         return () => {
             socket.current.disconnect();
@@ -175,10 +212,10 @@ function Doc() {
                 {React.cloneElement(editor, { data: data, actions: actions })}
             </main>
             <aside className="aside">
-                <button className="blue-button comment-button" id="newComment" onClick={newComment}>Comment</button>
+                <button className="blue-button comment-button" id="openCommentForm" onClick={openCommentForm}>Comment</button>
                 <p id="selectionDisplay"></p>
                 <form className='comment-form' style={{display: 'none'}} onSubmit={() => {return false}}>
-                    <button className='close-button' onClick={closeComment}>&#10005;</button>
+                    <button className='close-button' onClick={closeCommentForm}>&#10005;</button>
                     <textarea className='comment-text' id='commentText' rows="2" autoFocus></textarea>
                     <button className="enter" onClick={addComment}>Comment</button>
                 </form>
