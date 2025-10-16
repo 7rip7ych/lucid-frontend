@@ -65,9 +65,9 @@ function Doc() {
     useEffect(() => {
         // display comments on page
         let section = document.getElementById("commentSection");
-        if (!section) { return; }
+        if (!section) { return; } // return if unrendered
         section.innerHTML = "";
-        if (!comments) { return; }
+        if (!comments) { return; } // return if no comments
         comments.forEach((comment) => {
             let ele = document.createElement("div");
             ele.className = "comment";
