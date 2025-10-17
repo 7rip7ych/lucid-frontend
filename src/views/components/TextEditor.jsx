@@ -38,6 +38,7 @@ function TextEditor(props) {
         
     }, [props.data]);
 
+    /*
     if (editorRef.current) {
         // Set selection
         let field = document.getElementById("contenteditor");
@@ -45,6 +46,7 @@ function TextEditor(props) {
             props.actions.select([field.selectionStart, field.value.substring(field.selectionStart, field.selectionEnd)]);
         });
     }
+    */
 
     return (
         <>
