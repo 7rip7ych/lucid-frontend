@@ -11,8 +11,8 @@ import TextEditor from './components/TextEditor';
 import CodeEditor from './components/CodeEditor';
 import auth from './models/auth';
 
-const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/";
-// const SERVER_URL = "http://localhost:1337/";
+// const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/";
+const SERVER_URL = "http://localhost:1337/";
 
 function Doc() {
     const { id } = useParams();
@@ -222,16 +222,6 @@ function Doc() {
                     <button className="enter" onClick={addComment}>Comment</button>
                 </form>
                 <div className="comment-section" id="commentSection">
-                    <div className='comment'>
-                        <span className='byline'>7rip7ych</span>
-                        <p>comment contents bla bla bla</p>
-                        <button className='delete-button'>Delete</button>
-                    </div>
-                    <div className='comment'>
-                        <span className='byline'>7rip7ych</span>
-                        <p>comment contents bla bla bla</p>
-                        <button className='delete-button'>Delete</button>
-                    </div>
                 </div>
             </aside>
         </div>
