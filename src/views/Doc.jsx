@@ -9,9 +9,10 @@ import imgUrl from '../assets/skateboard.gif';
 import documents from './models/docs';
 import TextEditor from './components/TextEditor';
 import CodeEditor from './components/CodeEditor';
+import auth from './models/auth';
 
-// const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/";
-const SERVER_URL = "http://localhost:1337/";
+const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/";
+// const SERVER_URL = "http://localhost:1337/";
 
 function Doc() {
     const { id } = useParams();
@@ -96,7 +97,7 @@ function Doc() {
     function addComment(e) {
         e.preventDefault();
         let comment = {
-            owner: null,
+            owner: auth.email,
             document: data.id,
             content: document.getElementById('commentText').value,
             selection: selection
@@ -116,6 +117,7 @@ function Doc() {
     const actions = {
         create: async function createDoc(content=document.getElementById("contenteditor").value) {
             let newDoc = {
+                "owner": auth.email,
                 "title": document.getElementById("titleeditor").value,
                 "content": content,
                 "type": type
@@ -127,6 +129,7 @@ function Doc() {
         update: async function updateDoc(content=document.getElementById("contenteditor").value) {
             let updatedDoc = {
                 "id": data.id,
+                "owner": auth.email,
                 "title": document.getElementById("titleeditor").value,
                 "content": content,
                 "type": type
@@ -153,6 +156,7 @@ function Doc() {
             if (socket.current) {
                 var obj = {
                     id: data.id,
+                    owner: auth.email,
                     title: document.getElementById("titleeditor").value,
                     content: content,
                     type: type
