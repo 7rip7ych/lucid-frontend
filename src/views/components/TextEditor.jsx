@@ -38,15 +38,19 @@ function TextEditor(props) {
         
     }, [props.data]);
 
-    /*
+
     if (editorRef.current) {
         // Set selection
         let field = document.getElementById("contenteditor");
-        field.addEventListener("selectionchange", () => {
-            props.actions.select([field.selectionStart, field.value.substring(field.selectionStart, field.selectionEnd)]);
+        
+        field.addEventListener("mouseup", () => {
+            //console.log(field.value.split("\n"));
+            let txt = field.value.substring(field.selectionStart, field.selectionEnd);
+            let row = field.value.slice(0, field.selectionStart).split("\n").length;
+            props.actions.select([row, txt]);
         });
     }
-    */
+
 
     return (
         <>
@@ -59,7 +63,10 @@ function TextEditor(props) {
                 <input type="text" id="titleeditor" name="title" className="title" defaultValue={props.data.title} onKeyUp={handleChange} />
 
                 <label htmlFor="content">Innehåll</label>
-                <textarea id="contenteditor" name="content" className="content" defaultValue={props.data.content} rows="6" autoFocus onKeyUp={handleChange} ></textarea>
+                <div className="editor-container">
+                    <textarea id="contenteditor" name="content" className="content" defaultValue={props.data.content} rows="6" autoFocus onKeyUp={handleChange} ></textarea>
+                </div>
+                
                 
                 <div className="inline-buttons">
                     <input type="submit" id="create" value="Skapa" />
