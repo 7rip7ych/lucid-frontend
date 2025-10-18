@@ -97,13 +97,14 @@ function Doc() {
     function addComment(e) {
         e.preventDefault();
         let comment = {
-            owner: auth.email,
+            owner: auth.userId,
             document: data.id,
             content: document.getElementById('commentText').value,
             selection: selection
         }
 
-        socket.current.emit("new-comment", comment);
+        console.log(comment);
+        // socket.current.emit("new-comment", comment);
 
         closeCommentForm(e);
     }
@@ -114,10 +115,15 @@ function Doc() {
         e.target.parentNode.remove();
     }
 
+    // show selection
+    useEffect(() => {
+        document.getElementById("selectionDisplay").innerHTML = selection;
+    }, [selection]);
+
     const actions = {
         create: async function createDoc(content=document.getElementById("contenteditor").value) {
             let newDoc = {
-                "owner": auth.email,
+                "owners": auth.userId,
                 "title": document.getElementById("titleeditor").value,
                 "content": content,
                 "type": type
@@ -129,7 +135,7 @@ function Doc() {
         update: async function updateDoc(content=document.getElementById("contenteditor").value) {
             let updatedDoc = {
                 "id": data.id,
-                "owner": auth.email,
+                "owners": auth.userId,
                 "title": document.getElementById("titleeditor").value,
                 "content": content,
                 "type": type
@@ -156,7 +162,7 @@ function Doc() {
             if (socket.current) {
                 var obj = {
                     id: data.id,
-                    owner: auth.email,
+                    owners: auth.userId,
                     title: document.getElementById("titleeditor").value,
                     content: content,
                     type: type
