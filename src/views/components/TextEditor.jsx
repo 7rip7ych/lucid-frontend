@@ -49,8 +49,23 @@ function TextEditor(props) {
             let row = field.value.slice(0, field.selectionStart).split("\n").length;
             props.actions.select([row, txt]);
         });
+
+        field.oninput = () => {
+            var highlightedText = applyHighlights(field.value);
+            document.querySelector(".highlights").innerHTML = highlightedText;
+        }
+        
+        field.addEventListener("scroll", () => {
+            var back = document.querySelector(".backdrop");
+            var text = document.querySelector("#contenteditor");
+            back.scrollTo(text.scrollLeft, text.scrollTop);
+        });
     }
 
+    function applyHighlights(txt) {
+        // update highlights
+        return txt.replace(/\n$/g, '\n\n');
+    }
 
     return (
         <>
@@ -64,6 +79,9 @@ function TextEditor(props) {
 
                 <label htmlFor="content">Innehåll</label>
                 <div className="editor-container">
+                    <div className="backdrop">
+                        <div className="highlights"></div>
+                    </div>
                     <textarea id="contenteditor" name="content" className="content" defaultValue={props.data.content} rows="6" autoFocus onKeyUp={handleChange} ></textarea>
                 </div>
                 
