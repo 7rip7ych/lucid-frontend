@@ -33,16 +33,20 @@ function CodeEditor(props) {
     useEffect(() => {
         if (editorRef.current && monaco && decorations) {
             let decArr = [];
-            props.comments.forEach(comment => {
-                decArr.push({
-                    range: new monaco.Range(comment.selection[0],1,comment.selection[0],1),
-                    options: {
-                        isWholeLine: true,
-                        linesDecorationsClassName: "commentGlyph",
-                        hoverMessage: [{ value: comment.owner }, { value: comment.content }]
-                    },
+            if (props.comments) {
+                props.comments.forEach(comment => {
+                    if (!comment.selection) {return;}
+                    decArr.push({
+                        range: new monaco.Range(comment.selection[0],1,comment.selection[0],1),
+                        options: {
+                            isWholeLine: true,
+                            linesDecorationsClassName: "commentGlyph",
+                            hoverMessage: [{ value: comment.owner }, { value: comment.content }]
+                        },
+                    });
                 });
-            });
+            }
+            
             decorations.set(decArr);
         }
     }, [monaco, decorations, props.comments])
