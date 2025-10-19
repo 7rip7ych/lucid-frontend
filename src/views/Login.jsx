@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import auth from './models/auth';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ export default function Login() {
             setErrorMessage("Skrivit fel lösenord eller användarnamn.");
             return;
         }
-        
+
         document.body.classList.remove("loading"); // Change back cursor
         alert("Login lyckades!");
         navigate("/lucid-frontend/");
