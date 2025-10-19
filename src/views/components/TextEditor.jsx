@@ -66,6 +66,7 @@ function TextEditor(props) {
             if (props.comments && lines.length > 0) {
                 props.comments.forEach((comment) => {
                     // highlight text
+                    if (!comment.selection) { return; }
                     var i = comment.selection[0] - 1;
                     if (i < lines.length) {
                         lines[i] = lines[i].replace(comment.selection[1], `<mark data-id="${comment.id}">$&</mark>`);
