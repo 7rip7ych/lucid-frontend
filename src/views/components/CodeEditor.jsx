@@ -1,19 +1,21 @@
-import { useEffect, useRef } from "react";
-import Editor from "@monaco-editor/react";
+import { useEffect, useRef, useState } from "react";
+import { Editor, useMonaco } from "@monaco-editor/react";
 
 const execjs_url = "https://execjs.emilfolino.se/code";
 
 function CodeEditor(props) {
     const editorRef = useRef(null);
+    const monaco = useMonaco();
+    const [decorations, setDecorations] = useState([]);
 
     function handleEditorMount(editor) {
         editorRef.current = editor;
-        
+        setDecorations(editorRef.current.createDecorationsCollection([]));
         document.getElementById("titleeditor").oninput = (e) => {
             e.target.size = e.target.value.length;
         };
 
-        document.addEventListener("selectionchange", () => {
+        document.addEventListener("mouseup", () => {
             var sel = editorRef.current.getSelection();
             if (sel) {
                 props.actions.select([sel.startColumn, editorRef.current.getModel().getValueInRange(sel)]);
@@ -27,6 +29,23 @@ function CodeEditor(props) {
             editorRef.current.setValue("// " + txt.replaceAll("\n", "\n// "));
         }
     }
+
+    useEffect(() => {
+        if (editorRef.current && monaco && decorations) {
+            let decArr = [];
+            props.comments.forEach(comment => {
+                decArr.push({
+                    range: new monaco.Range(comment.selection[0],1,comment.selection[0],1),
+                    options: {
+                        isWholeLine: true,
+                        linesDecorationsClassName: "commentGlyph",
+                        hoverMessage: [{ value: comment.owner }, { value: comment.content }]
+                    },
+                });
+            });
+            decorations.set(decArr);
+        }
+    }, [monaco, decorations, props.comments])
 
     function saveCode() {
         props.actions.update(editorRef.current.getValue());
@@ -96,6 +115,7 @@ function CodeEditor(props) {
                 defaultValue={props.data.content}
                 onMount={handleEditorMount}
                 id="contenteditor"
+                glyphMargin="true"
             />
             <div id="terminalView" className="terminal-view hidden">
                 <span>OUTPUT</span>
