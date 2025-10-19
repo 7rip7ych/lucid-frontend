@@ -45,8 +45,8 @@ function TextEditor(props) {
             let field = document.getElementById("contenteditor");
             if (!field) { return }
             let lines = field.value.split("\n");
+
             field.addEventListener("mouseup", () => {
-                //console.log(field.value.split("\n"));
                 let txt = field.value.substring(field.selectionStart, field.selectionEnd);
                 let row = field.value.slice(0, field.selectionStart).split("\n").length;
                 props.actions.select([row, txt]);
@@ -63,11 +63,16 @@ function TextEditor(props) {
                 back.scrollTo(text.scrollLeft, text.scrollTop);
             });
 
-            props.comments.forEach((comment) => {
-                // highlight text
-                var i = comment.selection[0] - 1;
-                lines[i] = lines[i].replace(comment.selection[1], `<mark data-id="${comment.id}">$&</mark>`);
-            });
+            if (props.comments && lines.length > 0) {
+                props.comments.forEach((comment) => {
+                    // highlight text
+                    var i = comment.selection[0] - 1;
+                    if (i < lines.length) {
+                        lines[i] = lines[i].replace(comment.selection[1], `<mark data-id="${comment.id}">$&</mark>`);
+                    }
+                });
+            }
+            
 
             document.querySelector(".highlights").innerHTML = lines.join("\n");
             document.querySelectorAll(".highlights mark").forEach(highlight => {
