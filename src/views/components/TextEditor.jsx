@@ -39,28 +39,50 @@ function TextEditor(props) {
     }, [props.data]);
 
 
-    if (editorRef.current) {
-        // Set selection
-        let field = document.getElementById("contenteditor");
-        
-        field.addEventListener("mouseup", () => {
-            //console.log(field.value.split("\n"));
-            let txt = field.value.substring(field.selectionStart, field.selectionEnd);
-            let row = field.value.slice(0, field.selectionStart).split("\n").length;
-            props.actions.select([row, txt]);
-        });
+    useEffect(() => {
+        if (editorRef.current) {
+            // Set selection
+            let field = document.getElementById("contenteditor");
+            if (!field) { return }
+            let lines = field.value.split("\n");
+            field.addEventListener("mouseup", () => {
+                //console.log(field.value.split("\n"));
+                let txt = field.value.substring(field.selectionStart, field.selectionEnd);
+                let row = field.value.slice(0, field.selectionStart).split("\n").length;
+                props.actions.select([row, txt]);
+            });
 
-        field.oninput = () => {
-            var highlightedText = applyHighlights(field.value);
-            document.querySelector(".highlights").innerHTML = highlightedText;
+            field.oninput = () => {
+                var highlightedText = applyHighlights(field.value);
+                document.querySelector(".highlights").innerHTML = highlightedText;
+            }
+
+            field.addEventListener("scroll", () => {
+                var back = document.querySelector(".backdrop");
+                var text = document.querySelector("#contenteditor");
+                back.scrollTo(text.scrollLeft, text.scrollTop);
+            });
+
+            props.comments.forEach((comment) => {
+                // highlight text
+                var i = comment.selection[0] - 1;
+                lines[i] = lines[i].replace(comment.selection[1], `<mark data-id="${comment.id}">$&</mark>`);
+            });
+
+            document.querySelector(".highlights").innerHTML = lines.join("\n");
+            document.querySelectorAll(".highlights mark").forEach(highlight => {
+                highlight.onmouseenter = () => {
+                    var com = document.querySelector(`[data-id="${highlight.dataset.id}"]`);
+                    com.classList.add("focus");
+                }
+                highlight.onmouseleave = () => {
+                    var com = document.querySelector(`[data-id="${highlight.dataset.id}"]`);
+                    com.classList.remove("focus");
+                }
+            })
         }
-        
-        field.addEventListener("scroll", () => {
-            var back = document.querySelector(".backdrop");
-            var text = document.querySelector("#contenteditor");
-            back.scrollTo(text.scrollLeft, text.scrollTop);
-        });
-    }
+    })
+    
 
     function applyHighlights(txt) {
         // update highlights

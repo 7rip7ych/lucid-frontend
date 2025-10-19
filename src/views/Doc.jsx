@@ -40,6 +40,12 @@ function Doc() {
                 owner: "7rip7ych",
                 content: "comment example text",
                 selection: [1, "add"]
+            },
+            {
+                id: 2,
+                owner: "7rip7ych",
+                content: "comment some text",
+                selection: [3, "add"]
             }];
             // const tempComments = await documents.documentComments(id);
             setComments(tempComments);
@@ -72,11 +78,6 @@ function Doc() {
         section.innerHTML = "";
         if (!comments) { return; } // return if no comments
 
-        let txtarea = document.getElementById("contenteditor");
-        if (!txtarea) {
-            return
-        }
-        let lines = txtarea.value.split("\n");
         comments.forEach((comment) => {
             let ele = document.createElement("div");
             ele.className = "comment";
@@ -89,11 +90,6 @@ function Doc() {
             `;
             section.appendChild(ele);
 
-            // highlight text
-            if (txtarea) {
-                var i = comment.selection[0] - 1;
-                lines[i] = lines[i].replace(comment.selection[1], `<mark data-id="${comment.id}">$&</mark>`);
-            }
             ele.onmouseenter = () => {
                 var sel = document.querySelector(`[data-id="${ele.dataset.id}"]`);
                 sel.classList.add("focus");
@@ -103,20 +99,7 @@ function Doc() {
                 sel.classList.remove("focus");
             }
         });
-        
-        document.querySelector(".highlights").innerHTML = lines.join("\n");
-        document.querySelectorAll(".highlights mark").forEach(highlight => {
-            console.log(highlight)
-            highlight.onmouseenter = () => {
-                console.log(highlight)
-                var com = document.querySelector(`[data-id="${highlight.dataset.id}"]`);
-                com.classList.add("focus");
-            }
-            highlight.onmouseleave = () => {
-                var com = document.querySelector(`[data-id="${highlight.dataset.id}"]`);
-                com.classList.remove("focus");
-            }
-        })
+
         section.querySelectorAll(".delete-button").forEach(button => button.addEventListener("click", deleteComment))
     }, [comments]);
 
@@ -254,7 +237,7 @@ function Doc() {
                     <span>Code Editor</span>
                 </div>
                 {load}
-                {React.cloneElement(editor, { data: data, actions: actions })}
+                {React.cloneElement(editor, { data: data, actions: actions, comments: comments })}
             </main>
             <aside className="aside">
                 <button className="blue-button comment-button" id="openCommentForm" onClick={openCommentForm}>Comment</button>
