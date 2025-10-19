@@ -130,16 +130,24 @@ header a:hover {
     color: #ccc;
 }
 
+
+/* loading */
 .loading-gif {
     position: relative;
+    display: block;
     max-width: 200px;
 }
 
+.loading, 
+.loading button {
+    cursor: wait !important;
+}
 
 .editor-form .inline-buttons input.success-animation {
     background-color: #27AE14;
     border: 2px inset #3a9b3a;
 }
+
 
 
 /* Editor */
@@ -532,6 +540,8 @@ header a:hover {
 
 .commentGlyph {
     background: blue;
+    width: 5px !important;
+	margin-left: 3px;
 }
 
 .editor-container {
