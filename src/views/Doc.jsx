@@ -10,9 +10,10 @@ import documents from './models/docs';
 import TextEditor from './components/TextEditor';
 import CodeEditor from './components/CodeEditor';
 import auth from './models/auth';
+import commentFunctions from './models/comments';
 
-const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/";
-// const SERVER_URL = "http://localhost:1337/";
+// const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/";
+const SERVER_URL = "http://localhost:1337/";
 
 function Doc() {
     const { id } = useParams();
@@ -35,7 +36,7 @@ function Doc() {
             setTemp(docData);
 
             // set comments
-            let tempComments = [{
+            /*let tempComments = [{
                 id: 1,
                 owner: "7rip7ych",
                 content: "comment example text",
@@ -46,8 +47,8 @@ function Doc() {
                 owner: "7rip7ych",
                 content: "comment some text",
                 selection: [3, "add"]
-            }];
-            // const tempComments = await documents.documentComments(id);
+            }];*/
+            const tempComments = await documents.documentComments(id);
             setComments(tempComments);
 
             setLoading();
@@ -77,14 +78,13 @@ function Doc() {
 
         section.innerHTML = "";
         if (!comments) { return; } // return if no comments
-
         comments.forEach((comment) => {
             let ele = document.createElement("div");
             ele.className = "comment";
-            ele.dataset.id = comment.id;
+            ele.dataset.id = comment._id;
             ele.dataset.selection = JSON.stringify(comment.selection);
             ele.innerHTML = `
-                <span class="byline">${comment.owner}</span>
+                <span class="byline">${comment.owner.email}</span>
                 <p>${comment.content}</p>
                 <button class="delete-button">Delete</button>
             `;
@@ -114,7 +114,7 @@ function Doc() {
         document.querySelector(".comment-form").style.display = "none";
     }
 
-    function addComment(e) {
+    async function addComment(e) {
         e.preventDefault();
         let comment = {
             owner: auth.userId,
@@ -123,15 +123,19 @@ function Doc() {
             selection: selection
         }
 
-        console.log(comment);
-        // socket.current.emit("new-comment", comment);
+        commentFunctions.addOneComment(comment);
+        var newComments = await documents.documentComments(id);
+        setComments(await newComments);
+        socket.current.emit("comment", id);
 
         closeCommentForm(e);
     }
 
-    function deleteComment(e) {
+    async function deleteComment(e) {
         e.preventDefault();
-        socket.current.emit("del-comment", e.target.parentNode.id);
+        var commentId = e.target.parentNode.dataset.id;
+        await commentFunctions.deleteOneComment(commentId);
+        socket.current.emit("comment", id);
         e.target.parentNode.remove();
     }
 
@@ -213,9 +217,23 @@ function Doc() {
         });
 
         // set comments
-        socket.current.on("comment", (comments) => {
-            setComments(comments);
+        socket.current.on("new-comment", async() => {
+            console.log("sock")
+            var newComments = await documents.documentComments(id);
+            setComments(await newComments);
         });
+
+        socket.current.on("del-comment", async() => {
+            console.log("sock")
+            var newComments = await documents.documentComments(id);
+            setComments(await newComments);
+        })
+
+        socket.current.on("comment", async() => {
+            console.log("sock")
+            var newComments = await documents.documentComments(id);
+            setComments(await newComments);
+        })
 
         return () => {
             socket.current.disconnect();
