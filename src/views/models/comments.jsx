@@ -3,7 +3,7 @@ import auth from './auth.jsx';
 const server = 'https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/';
 // const server = 'http://localhost:1337/';
 
-const comments = {
+const commentFunctions = {
     addOneComment: async function addOneComment(comment) {
         const response = await fetch(`${server}comments`, {
             method: 'POST',
@@ -28,4 +28,4 @@ const comments = {
     },
 };
 
-export default comments;
+export default commentFunctions;
