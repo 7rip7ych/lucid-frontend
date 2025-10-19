@@ -16,13 +16,15 @@ export default function Login() {
 
     const handleLogin = async (event) => {
         event.preventDefault();
+        document.body.classList.add("loading"); // Change cursor to loading
 
         const result = await auth.login(email, password);
         if (result.error) {
             setErrorMessage("Skrivit fel lösenord eller användarnamn.");
             return;
         }
-
+        
+        document.body.classList.remove("loading"); // Change back cursor
         alert("Login lyckades!");
         navigate("/lucid-frontend/");
         return;

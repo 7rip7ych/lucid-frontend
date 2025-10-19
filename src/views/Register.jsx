@@ -12,6 +12,7 @@ export default function Register() {
 
     const handleRegister = async (event) => {
         event.preventDefault();
+        document.body.classList.add("loading"); // Change cursor to loading
 
         if (password !== password2) {
             setErrorMessage("Lösenorden matchar inte!");
@@ -20,6 +21,7 @@ export default function Register() {
 
         const result = await auth.register(email, password);
 
+        document.body.classList.remove("loading"); // Change back cursor
         if (result !== "ok") {
             setErrorMessage("Registrering misslyckades. Försök igen.");
         } else {
