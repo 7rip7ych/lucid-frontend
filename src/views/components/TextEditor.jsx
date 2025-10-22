@@ -44,39 +44,56 @@ function TextEditor(props) {
             // Set selection
             let field = document.getElementById("contenteditor");
             if (!field) { return }
-            let lines = field.value.split("\n");
-
-            field.addEventListener("mouseup", () => {
-                let txt = field.value.substring(field.selectionStart, field.selectionEnd);
+            
+            highlightComments()
+            
+            field.addEventListener("click", () => {
                 let row = field.value.slice(0, field.selectionStart).split("\n").length;
-                props.actions.select([row, txt]);
+                props.actions.select(row);
+                highlightRow(row);
             });
 
+            
             field.oninput = () => {
-                var highlightedText = applyHighlights(field.value);
-                document.querySelector(".highlights").innerHTML = highlightedText;
+                highlightComments();
+                highlightRow(field.value.slice(0, field.selectionStart).split("\n").length);
             }
 
+            
             field.addEventListener("scroll", () => {
                 var back = document.querySelector(".backdrop");
                 var text = document.querySelector("#contenteditor");
                 back.scrollTo(text.scrollLeft, text.scrollTop);
             });
+        }
+    });
+    
+    if (document.getElementById("openCommentForm")){
+        let field = document.getElementById("contenteditor");
+        document.getElementById("openCommentForm").addEventListener("click", highlightRow, field.value.slice(0, field.selectionStart).split("\n").length);
+    }
+    if (document.querySelector(".comment-form")) {
+        document.querySelector(".comment-form").addEventListener("submit", highlightRow, null);
+    }
 
-            if (props.comments && lines.length > 0) {
-                props.comments.forEach((comment) => {
-                    // highlight text
-                    if (!comment.selection) { return; }
-                    var i = comment.selection[0] - 1;
-                    if (i < lines.length) {
-                        lines[i] = lines[i].replace(comment.selection[1], `<mark data-id="${comment.id}">$&</mark>`);
-                    }
-                });
-            }
+    function highlightComments() {
+        let high = document.querySelector(".highlights");
+        let lines = document.getElementById("contenteditor").value.split("\n");
             
+        if (props.comments && lines.length > 0) {
+            props.comments.forEach((comment) => {
+                // highlight text
+                if (!comment.selection) { return; }
+                var i = comment.selection - 1;
+                if (i < lines.length) {
+                    lines[i] = lines[i].replace(/.*/, `<mark data-id="${comment.id}">$&</mark>`);
+                }
+            });
+        }
+        high.innerHTML = lines.join("\n");
 
-            document.querySelector(".highlights").innerHTML = lines.join("\n");
-            document.querySelectorAll(".highlights mark").forEach(highlight => {
+        /*
+        document.querySelectorAll(".highlights mark").forEach(highlight => {
                 highlight.onmouseenter = () => {
                     var com = document.querySelector(`[data-id="${highlight.dataset.id}"]`);
                     com.classList.add("focus");
@@ -86,13 +103,28 @@ function TextEditor(props) {
                     com.classList.remove("focus");
                 }
             })
-        }
-    })
-    
+        */
+    }
 
-    function applyHighlights(txt) {
-        // update highlights
-        return txt.replace(/\n$/g, '\n\n');
+    function highlightRow(row) {
+        let form = document.querySelector(".comment-form");
+        let high = document.querySelector(".highlights");
+        let lines = high.innerHTML.split("\n");
+
+        if (high.innerHTML && lines) {
+            // select row
+            let lastRow = lines.findIndex(line => line.includes('temp-highlight'));
+            if (row && lastRow === row - 1) { return; }
+            console.log(1);
+            if (lastRow !== -1) {
+                lines[lastRow] = lines[lastRow].replace(/<mark class="temp-highlight">([^\n]*)<\/mark>/, `$1`);
+            }
+            if (row && form.offsetParent !== null) {
+                lines[row-1] = lines[row-1].replace(/.*/, '<mark class="temp-highlight">$&</mark>');
+            }
+            
+            high.innerHTML = lines.join("\n");
+        }
     }
 
     return (
