@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
@@ -12,8 +12,8 @@ import CodeEditor from './components/CodeEditor';
 import auth from './models/auth';
 import commentFunctions from './models/comments';
 
-// const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/";
-const SERVER_URL = "http://localhost:1337/";
+const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/";
+// const SERVER_URL = "http://localhost:1337/";
 
 function Doc() {
     const { id } = useParams();
@@ -25,6 +25,7 @@ function Doc() {
     const [temp, setTemp] = useState("");
     const [selection, setSelection] = useState([]);
     const [comments, setComments] = useState([]);
+    const [commentMode, setCommentMode] = useState(false);
 
     useEffect(() => {
         const loadData = async () => {
@@ -37,16 +38,16 @@ function Doc() {
 
             // set comments
             /*let tempComments = [{
-                id: 1,
-                owner: "7rip7ych",
+                _id: 1,
+                owner: {email: "dev.7rip7ych@gmail.com"},
                 content: "comment example text",
-                selection: [1, "add"]
+                selection: 1
             },
             {
-                id: 2,
-                owner: "7rip7ych",
+                _id: 2,
+                owner: {email: "7rip7ych"},
                 content: "comment some text",
-                selection: [3, "add"]
+                selection: 3
             }];*/
             const tempComments = await documents.documentComments(id);
             setComments(tempComments);
@@ -71,6 +72,14 @@ function Doc() {
         }
     }
 
+    const deleteComment = useCallback(async(e) => {
+        e.preventDefault();
+        var commentId = e.target.parentNode.dataset.id;
+        await commentFunctions.deleteOneComment(commentId);
+        socket.current.emit("comment", id);
+        e.target.parentNode.remove();
+    }, [id]);
+
     useEffect(() => {
         // display comments on page
         let section = document.getElementById("commentSection");
@@ -78,11 +87,12 @@ function Doc() {
 
         section.innerHTML = "";
         if (!comments) { return; } // return if no comments
+
         comments.forEach((comment) => {
             let ele = document.createElement("div");
             ele.className = "comment";
             ele.dataset.id = comment._id;
-            ele.dataset.selection = JSON.stringify(comment.selection);
+            ele.dataset.selection = comment.selection;
             ele.innerHTML = `
                 <span class="byline">${comment.owner.email}</span>
                 <p>${comment.content}</p>
@@ -91,31 +101,34 @@ function Doc() {
             section.appendChild(ele);
 
             ele.onmouseenter = () => {
-                var sel = document.querySelector(`[data-id="${ele.dataset.id}"]`);
-                sel.classList.add("focus");
+                var sel = document.querySelectorAll(`[data-id="${ele.dataset.id}"]`);
+                sel.forEach(ele => ele.classList.add("focus"));
             }
             ele.onmouseleave = () => {
-                var sel = document.querySelector(`[data-id="${ele.dataset.id}"]`);
-                sel.classList.remove("focus");
+                var sel = document.querySelectorAll(`[data-id="${ele.dataset.id}"]`);
+                sel.forEach(ele => ele.classList.remove("focus"));
             }
         });
 
         section.querySelectorAll(".delete-button").forEach(button => button.addEventListener("click", deleteComment))
-    }, [comments]);
+    }, [comments, deleteComment]);
 
 
     function openCommentForm() {
         // highlight text
         document.querySelector(".comment-form").style.display = "block";
+        setCommentMode(true);
     }
 
     function closeCommentForm(e) {
         e.preventDefault();
         document.querySelector(".comment-form").style.display = "none";
+        setCommentMode(false);
     }
 
     async function addComment(e) {
         e.preventDefault();
+        // Define comment object
         let comment = {
             owner: auth.userId,
             document: data.id,
@@ -123,26 +136,13 @@ function Doc() {
             selection: selection
         }
 
-        commentFunctions.addOneComment(comment);
-        var newComments = await documents.documentComments(id);
+        commentFunctions.addOneComment(comment); // Add to database
+        var newComments = await documents.documentComments(id); // Get all comments
         setComments(await newComments);
-        socket.current.emit("comment", id);
+        socket.current.emit("comment", id); // Emit change
 
         closeCommentForm(e);
     }
-
-    async function deleteComment(e) {
-        e.preventDefault();
-        var commentId = e.target.parentNode.dataset.id;
-        await commentFunctions.deleteOneComment(commentId);
-        socket.current.emit("comment", id);
-        e.target.parentNode.remove();
-    }
-
-    // show selection
-    useEffect(() => {
-        document.getElementById("selectionDisplay").innerHTML = selection;
-    }, [selection]);
 
     const actions = {
         create: async function createDoc(content=document.getElementById("contenteditor").value) {
@@ -255,11 +255,10 @@ function Doc() {
                     <span>Code Editor</span>
                 </div>
                 {load}
-                {React.cloneElement(editor, { data: data, actions: actions, comments: comments })}
+                {React.cloneElement(editor, { data: data, actions: actions, comments: comments, commentMode: commentMode })}
             </main>
             <aside className="aside">
                 <button className="blue-button comment-button" id="openCommentForm" onClick={openCommentForm}>Comment</button>
-                <p id="selectionDisplay"></p>
                 <form className='comment-form' style={{display: 'none'}} onSubmit={() => {return false}}>
                     <button className='close-button' onClick={closeCommentForm}>&#10005;</button>
                     <textarea className='comment-text' id='commentText' rows="2" autoFocus></textarea>
