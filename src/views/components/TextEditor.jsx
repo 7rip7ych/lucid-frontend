@@ -1,5 +1,7 @@
 import { useRef, useEffect, useCallback } from "react";
 
+import auth from "../models/auth";
+
 function TextEditor(props) {
     const editorRef = useRef(null);
 
@@ -107,7 +109,11 @@ function TextEditor(props) {
                 if (!comment.selection) { return; }
                 var i = comment.selection - 1;
                 if (i < lines.length) {
-                    lines[i] = lines[i].replace(/.*/, `<mark data-id="${comment.id}">$&</mark>`);
+                    var cls = "comment-highlight";
+                    if (comment.owner.email === auth.email) {
+                        cls = "my-comment-highlight"
+                    }
+                    lines[i] = lines[i].replace(/.*/, `<mark class="${cls}" data-id="${comment._id}">$&</mark>`);
                 }
             });
         }
