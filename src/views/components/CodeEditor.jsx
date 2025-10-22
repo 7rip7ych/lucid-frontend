@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Editor, useMonaco } from "@monaco-editor/react";
 
 import auth from "../models/auth";
@@ -19,20 +19,6 @@ function CodeEditor(props) {
             e.target.size = e.target.value.length;
         };
 
-        // Selection
-        document.getElementById("codeeditor").addEventListener("mouseup", () => {
-            // Select row
-            var sel = editorRef.current.getSelection();
-            if (sel) {
-                var line = sel.startLineNumber;
-                props.actions.select(line);
-                if (document.querySelector(".comment-form").offsetParent !== null) {
-                    // Show selection if comment form is open
-                    editorRef.current.setSelection(new monaco.Range(line,1,line+1,1));
-                }
-            }
-        });
-
         // Comment text content
         if (props.data.type && props.data.type == "code") {
             editorRef.current.setValue(props.data.content);
@@ -41,9 +27,28 @@ function CodeEditor(props) {
             editorRef.current.setValue("// " + txt.replaceAll("\n", "\n// "));
         }
     }
+    const selectRow = useCallback(() => {
+        // Select row
+        var sel = editorRef.current.getSelection();
+        console.log(sel);
+        if (sel) {
+            var line = sel.startLineNumber;
+            props.actions.select(line);
+            console.log(line)
+            if (document.querySelector(".comment-form").offsetParent !== null && monaco) {
+                // Show selection if comment form is open
+                editorRef.current.setSelection(new monaco.Range(line,1,line+1,1));
+            }
+        }
+    }, [monaco, props.actions]);
 
+    // Selection
     useEffect(() => {
-        // Set decorations for comments
+        document.getElementById("codeeditor").addEventListener("click", selectRow);
+    }, [monaco, selectRow])
+
+    // Set decorations for comments
+    useEffect(() => {
         if (editorRef.current && monaco && decorations) {
             let decArr = [];
             if (props.comments) {
@@ -67,6 +72,16 @@ function CodeEditor(props) {
             decorations.set(decArr);
         }
     }, [monaco, decorations, props.comments])
+
+    useEffect(() => {
+        if (editorRef.current && monaco && props.commentMode) {
+            var sel = editorRef.current.getSelection();
+            if (sel && sel.startLineNumber) {
+                var line = sel.startLineNumber;
+                editorRef.current.setSelection(new monaco.Range(line,1,line+1,1));
+            }
+        }
+    }, [props.commentMode, monaco]);
 
 
     function saveCode() {
