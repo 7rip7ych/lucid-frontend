@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Editor, useMonaco } from "@monaco-editor/react";
 
+import auth from "../models/auth";
+
 const execjs_url = "https://execjs.emilfolino.se/code";
 
 function CodeEditor(props) {
@@ -11,17 +13,27 @@ function CodeEditor(props) {
     function handleEditorMount(editor) {
         editorRef.current = editor;
         setDecorations(editorRef.current.createDecorationsCollection([]));
+
+        // Title length
         document.getElementById("titleeditor").oninput = (e) => {
             e.target.size = e.target.value.length;
         };
 
-        document.addEventListener("mouseup", () => {
+        // Selection
+        document.getElementById("codeeditor").addEventListener("mouseup", () => {
+            // Select row
             var sel = editorRef.current.getSelection();
             if (sel) {
-                props.actions.select([sel.startColumn, editorRef.current.getModel().getValueInRange(sel)]);
+                var line = sel.startLineNumber;
+                props.actions.select(line);
+                if (document.querySelector(".comment-form").offsetParent !== null) {
+                    // Show selection if comment form is open
+                    editorRef.current.setSelection(new monaco.Range(line,1,line+1,1));
+                }
             }
         });
 
+        // Comment text content
         if (props.data.type && props.data.type == "code") {
             editorRef.current.setValue(props.data.content);
         } else {
@@ -31,17 +43,22 @@ function CodeEditor(props) {
     }
 
     useEffect(() => {
+        // Set decorations for comments
         if (editorRef.current && monaco && decorations) {
             let decArr = [];
             if (props.comments) {
                 props.comments.forEach(comment => {
-                    if (!comment.selection) {return;}
+                    if (!comment.selection) { return; } // No selection = no decoration
+                    let decClass = "commentGlyph"
+                    if (comment.owner.email === auth.email) {
+                        decClass = "myCommentGlyph"
+                    }
                     decArr.push({
-                        range: new monaco.Range(comment.selection[0],1,comment.selection[0],1),
+                        range: new monaco.Range(comment.selection,1,comment.selection,1),
                         options: {
                             isWholeLine: true,
-                            linesDecorationsClassName: "commentGlyph",
-                            hoverMessage: [{ value: comment.owner }, { value: comment.content }]
+                            linesDecorationsClassName: decClass,
+                            hoverMessage: [{ value: comment.owner.email }, { value: comment.content }]
                         },
                     });
                 });
@@ -50,6 +67,7 @@ function CodeEditor(props) {
             decorations.set(decArr);
         }
     }, [monaco, decorations, props.comments])
+
 
     function saveCode() {
         props.actions.update(editorRef.current.getValue());
