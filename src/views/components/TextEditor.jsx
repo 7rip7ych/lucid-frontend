@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 
 function TextEditor(props) {
     const editorRef = useRef(null);
@@ -38,6 +38,28 @@ function TextEditor(props) {
         
     }, [props.data]);
 
+    const highlightRow = useCallback((row) => {
+        let high = document.querySelector(".highlights");
+        let lines;
+        if (high) {
+            lines = high.innerHTML.split("\n");
+        }
+        
+        if (lines) {
+            // select row
+            let lastRow = lines.findIndex(line => line.includes('temp-highlight'));
+            if (row && lastRow === row - 1) { return; }
+
+            if (lastRow !== -1) {
+                lines[lastRow] = lines[lastRow].replace(/<mark class="temp-highlight">([^\n]*)<\/mark>/, `$1`);
+            }
+            if (document.querySelector(".comment-form").offsetParent !== null && row && lines[row-1]) {
+                lines[row-1] = lines[row-1].replace(/.*/, '<mark class="temp-highlight">$&</mark>');
+            }
+            
+            high.innerHTML = lines.join("\n");
+        }
+    }, []);
 
     useEffect(() => {
         if (editorRef.current) {
@@ -45,7 +67,7 @@ function TextEditor(props) {
             let field = document.getElementById("contenteditor");
             if (!field) { return }
             
-            highlightComments()
+            highlightComments();
             
             field.addEventListener("click", () => {
                 let row = field.value.slice(0, field.selectionStart).split("\n").length;
@@ -53,29 +75,26 @@ function TextEditor(props) {
                 highlightRow(row);
             });
 
-            
             field.oninput = () => {
                 highlightComments();
                 highlightRow(field.value.slice(0, field.selectionStart).split("\n").length);
             }
 
-            
             field.addEventListener("scroll", () => {
                 var back = document.querySelector(".backdrop");
                 var text = document.querySelector("#contenteditor");
                 back.scrollTo(text.scrollLeft, text.scrollTop);
             });
-
-            if (document.getElementById("openCommentForm")){
-                let field = document.getElementById("contenteditor");
-                document.getElementById("openCommentForm").addEventListener("click", highlightRow, field.value.slice(0, field.selectionStart).split("\n").length);
-            }
-            if (document.querySelector(".comment-form")) {
-                document.querySelector(".comment-form").addEventListener("submit", highlightRow, null);
-            }
         }
     });
     
+    useEffect(() => {
+        let field = document.getElementById("contenteditor");
+        if (field) {
+            let row = field.value.slice(0, field.selectionStart).split("\n").length;
+            highlightRow(row);
+        }
+    }, [props.commentMode, highlightRow])
     
 
     function highlightComments() {
@@ -93,45 +112,8 @@ function TextEditor(props) {
             });
         }
         high.innerHTML = lines.join("\n");
-
-        /*
-        document.querySelectorAll(".highlights mark").forEach(highlight => {
-                highlight.onmouseenter = () => {
-                    var com = document.querySelector(`[data-id="${highlight.dataset.id}"]`);
-                    com.classList.add("focus");
-                }
-                highlight.onmouseleave = () => {
-                    var com = document.querySelector(`[data-id="${highlight.dataset.id}"]`);
-                    com.classList.remove("focus");
-                }
-            })
-        */
     }
-
-    function highlightRow(row) {
-        let form = document.querySelector(".comment-form");
-        let high = document.querySelector(".highlights");
-        let lines;
-        if (high) {
-            lines = high.innerHTML.split("\n");
-        }
-        
-        if (lines) {
-            // select row
-            let lastRow = lines.findIndex(line => line.includes('temp-highlight'));
-            if (row && lastRow === row - 1) { return; }
-
-            if (lastRow !== -1) {
-                lines[lastRow] = lines[lastRow].replace(/<mark class="temp-highlight">([^\n]*)<\/mark>/, `$1`);
-            }
-            if (row && form.offsetParent !== null) {
-                lines[row-1] = lines[row-1].replace(/.*/, '<mark class="temp-highlight">$&</mark>');
-            }
-            
-            high.innerHTML = lines.join("\n");
-        }
-    }
-
+    
     return (
         <>
         <div className="texteditor">
