@@ -65,16 +65,18 @@ function TextEditor(props) {
                 var text = document.querySelector("#contenteditor");
                 back.scrollTo(text.scrollLeft, text.scrollTop);
             });
+
+            if (document.getElementById("openCommentForm")){
+                let field = document.getElementById("contenteditor");
+                document.getElementById("openCommentForm").addEventListener("click", highlightRow, field.value.slice(0, field.selectionStart).split("\n").length);
+            }
+            if (document.querySelector(".comment-form")) {
+                document.querySelector(".comment-form").addEventListener("submit", highlightRow, null);
+            }
         }
     });
     
-    if (document.getElementById("openCommentForm")){
-        let field = document.getElementById("contenteditor");
-        document.getElementById("openCommentForm").addEventListener("click", highlightRow, field.value.slice(0, field.selectionStart).split("\n").length);
-    }
-    if (document.querySelector(".comment-form")) {
-        document.querySelector(".comment-form").addEventListener("submit", highlightRow, null);
-    }
+    
 
     function highlightComments() {
         let high = document.querySelector(".highlights");
@@ -109,13 +111,16 @@ function TextEditor(props) {
     function highlightRow(row) {
         let form = document.querySelector(".comment-form");
         let high = document.querySelector(".highlights");
-        let lines = high.innerHTML.split("\n");
-
-        if (high.innerHTML && lines) {
+        let lines;
+        if (high) {
+            lines = high.innerHTML.split("\n");
+        }
+        
+        if (lines) {
             // select row
             let lastRow = lines.findIndex(line => line.includes('temp-highlight'));
             if (row && lastRow === row - 1) { return; }
-            console.log(1);
+
             if (lastRow !== -1) {
                 lines[lastRow] = lines[lastRow].replace(/<mark class="temp-highlight">([^\n]*)<\/mark>/, `$1`);
             }
