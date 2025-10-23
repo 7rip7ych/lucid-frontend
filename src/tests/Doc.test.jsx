@@ -45,11 +45,12 @@ describe('Doc', () => {
             );
         
             const buttons = screen.getAllByRole('button');
-            expect(buttons).toHaveLength(3);
+            expect(buttons).toHaveLength(4);
 
             expect(screen.getByRole('button', { name: 'Skapa' })).toBeInTheDocument();
             expect(screen.getByRole('button', { name: 'Uppdatera' })).toBeInTheDocument();
             expect(screen.getByRole('button', { name: 'Radera' })).toBeInTheDocument();
+            expect(screen.getByRole('button', { name: 'Comment' })).toBeInTheDocument();
         });
 
         test('Test if editor switch is rendered', () => {

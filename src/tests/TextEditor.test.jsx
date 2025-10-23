@@ -7,7 +7,8 @@ const testDoc = {
     id: 101,
     type: "text",
     title: "test",
-    content: "hello world"
+    content: "hello world",
+    owners: [{ email: "banan" }]
 };
 
 describe('Text Editor', () => {
@@ -31,6 +32,6 @@ describe('Text Editor', () => {
         
         expect(screen.getByDisplayValue(testDoc.id)).toBeInTheDocument();
         expect(screen.getByDisplayValue(testDoc.title)).toBeInTheDocument();
-        expect(screen.getByText(testDoc.content)).toBeInTheDocument();
+        expect(screen.getAllByText(testDoc.content)).toHaveLength(2);
     });
 });
