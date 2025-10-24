@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
+import { Routes, Route, Link, Navigate, useLocation } from "react-router-dom";
 import Index from "./views/Index";
 import Doc from "./views/Doc";
 import Login from "./views/Login";
@@ -7,16 +7,16 @@ import Logout from "./views/components/Logout";
 import auth from "./views/models/auth";
 
 export default function App() {
+    const location = useLocation();
+
     return (
-    <BrowserRouter>
         <Routes>
-            <Route path="/lucid-frontend/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+            <Route path="/lucid-frontend/" element={<ProtectedRoute><Index key={location.key} /></ProtectedRoute>} />
             <Route path="/lucid-frontend/login" element={<Login  />} />
             <Route path="/lucid-frontend/logout" element={<Logout />} />
             <Route path="/lucid-frontend/register" element={<Register />} />
             <Route path="/lucid-frontend/:id" element={<ProtectedRoute><Doc /></ProtectedRoute>} />
         </Routes>
-    </BrowserRouter>
     );
 }
 
