@@ -1,9 +1,7 @@
 import TextEditor from '../views/components/TextEditor';
-import { render, screen } from '@testing-library/react';
-import { describe, test, expect } from 'vitest';
+import { render, screen, act } from '@testing-library/react';
+import { describe, test, expect, beforeEach } from 'vitest';
 import { MemoryRouter } from "react-router-dom";
-import { beforeEach } from 'vitest';
-import { act } from '@testing-library/react';
 
 const testDoc = {
     id: 101,
@@ -43,7 +41,6 @@ describe('Text Editor', () => {
                 </MemoryRouter>
             );
         });
-        
     });
     
     test('Test if component renders DOM', () => {

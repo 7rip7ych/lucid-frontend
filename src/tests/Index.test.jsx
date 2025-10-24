@@ -19,6 +19,7 @@ const testDocs = [
         owners: [{ email: "banan@gmail.com" }]
     }
 ]
+
 describe('Index', () => {
     test('renders Index', () => {
         render(
@@ -34,7 +35,6 @@ describe('Index', () => {
     });
 
     test('renders documents', async () => {
-        
         vi.mock(import('../views/models/docs.jsx'), async() => {
             return {
                 default: {
@@ -51,11 +51,12 @@ describe('Index', () => {
                 <Index />
             </MemoryRouter>
         );
+
         waitFor(() => {
             expect(screen.getByText(testDocs[0].title)).toBeInTheDocument();
             expect(screen.getByText(testDocs[1].title)).toBeInTheDocument();
         });
-        
+
         vi.resetAllMocks();
     });
 });

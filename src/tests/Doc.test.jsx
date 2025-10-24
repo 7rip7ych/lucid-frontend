@@ -1,10 +1,8 @@
 import Doc from '../views/Doc';
-import { render, screen, waitFor } from '@testing-library/react';
-import { describe, test, expect, afterEach } from 'vitest';
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { render, screen, waitFor, act } from '@testing-library/react';
+import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
+import { MemoryRouter } from "react-router-dom";
 import { userEvent } from "@testing-library/user-event";
-import { vi, beforeEach } from 'vitest';
-import { act } from 'react';
 
 const testDoc = {
     _id: 101,
@@ -53,7 +51,7 @@ describe('Doc', () => {
         });
 
         
-        await act( async() => {
+        await act(async() => {
             render(
                 <MemoryRouter initialEntries={['/lucid-frontend/101']}>
                     <Doc />
@@ -107,7 +105,7 @@ describe('Doc', () => {
                 expect(screen.getByDisplayValue(testDoc.title)).toBeInTheDocument();
                 const contents = screen.getAllByText(testDoc.content);
                 expect(contents[0]).toBeInTheDocument();
-            })
+            });
         });
 
         test('Testing that comments are rendered', async () => {
@@ -130,7 +128,7 @@ describe('Doc', () => {
             await userEvent.click(document.querySelector('#changeEditor'));
             await waitFor(() => {
                 expect(screen.getAllByRole('textbox')).toHaveLength(1);
-            })
-        })
+            });
+        });
     });
 });
