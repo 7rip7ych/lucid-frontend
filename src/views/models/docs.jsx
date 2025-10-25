@@ -107,7 +107,7 @@ const documents = {
     deleteOneDoc: async function deleteOneDoc(id) {
         const response = await fetch(`${server}docs/${id}`, {        method: 'DELETE',
         headers: { 'x-access-token': auth.token }
-         });
+        });
         const result = await response.json();
 
         return result;
