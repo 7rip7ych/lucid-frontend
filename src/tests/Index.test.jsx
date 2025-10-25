@@ -19,7 +19,7 @@ const testDocs = [
         content: "hello world",
         owners: [{ email: "banan@gmail.com" }]
     }
-]
+];
 
 describe('Index', () => {
     beforeEach(async() => {
@@ -45,7 +45,8 @@ describe('Index', () => {
 
     afterEach(() => {
         vi.resetAllMocks();
-    })
+    });
+
     test('renders Index', async() => {
         const h2Element = await screen.getByRole('heading', { level: 2 });
         
