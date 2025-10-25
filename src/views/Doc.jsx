@@ -31,24 +31,15 @@ function Doc() {
         const loadData = async () => {
             const docData = await documents.getOneDoc(id);
             // Rename _id
-            docData["id"] = docData["_id"];
-            delete docData["_id"];
+            if ("_id" in docData) {
+                docData["id"] = docData["_id"];
+                delete docData["_id"];
+            }
+            
             setData(docData);
             setTemp(docData);
 
             // set comments
-            /*let tempComments = [{
-                _id: 1,
-                owner: {email: "dev.7rip7ych@gmail.com"},
-                content: "comment example text",
-                selection: 1
-            },
-            {
-                _id: 2,
-                owner: {email: "7rip7ych"},
-                content: "comment some text",
-                selection: 3
-            }];*/
             const tempComments = await documents.documentComments(id);
             setComments(tempComments);
 
@@ -217,23 +208,10 @@ function Doc() {
         });
 
         // set comments
-        socket.current.on("new-comment", async() => {
-            console.log("sock")
+        socket.current.on("comment", async() => {
             var newComments = await documents.documentComments(id);
             setComments(await newComments);
         });
-
-        socket.current.on("del-comment", async() => {
-            console.log("sock")
-            var newComments = await documents.documentComments(id);
-            setComments(await newComments);
-        })
-
-        socket.current.on("comment", async() => {
-            console.log("sock")
-            var newComments = await documents.documentComments(id);
-            setComments(await newComments);
-        })
 
         return () => {
             socket.current.disconnect();
