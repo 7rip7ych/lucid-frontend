@@ -3,6 +3,7 @@ import { render, screen, waitFor, act } from '@testing-library/react';
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
 import { MemoryRouter } from "react-router-dom";
 import { userEvent } from "@testing-library/user-event";
+import { io } from 'socket.io-client';
 
 const testDoc = {
     _id: 101,
@@ -33,6 +34,19 @@ const testComments = [
     }
 ];
 
+let callback;
+const mockSocket = {
+    emit: vi.fn(),
+    on: vi.fn((event, call) => {
+        if (event == "content") {
+            callback = call
+        }
+        
+    }),
+    disconnect: vi.fn()
+};
+
+const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/";
 
 describe('Doc', () => {
     beforeEach(async() => {
@@ -50,7 +64,26 @@ describe('Doc', () => {
             }
         });
 
-        
+        vi.mock(import('socket.io-client'), async() => {
+            const og = await vi.importActual('socket.io-client');
+            return {
+                ...og,
+                io: vi.fn(() => {
+                    return mockSocket;
+                })
+            }
+        });
+
+        vi.mock(import('react-router-dom'), async() => {
+            const og = await vi.importActual('react-router-dom');
+            return {
+                ...og,
+                useParams: () => ({
+                    id: 101
+                })
+            }
+        });
+
         await act(async() => {
             render(
                 <MemoryRouter initialEntries={['/lucid-frontend/101']}>
@@ -130,5 +163,50 @@ describe('Doc', () => {
                 expect(screen.getAllByRole('textbox')).toHaveLength(1);
             });
         });
+    });
+
+    describe('Sockets', () => {
+        test('Testing if component connects to socket', async () => {
+            await waitFor(() => {
+                expect(io).toHaveBeenCalledWith(SERVER_URL);
+                expect(mockSocket.emit).toHaveBeenCalledWith("create", 101);
+            });
+        });
+
+        test('Testing if component sends data to socket', async () => {
+            await userEvent.type(document.getElementById("contenteditor"), "!");
+            await waitFor(() => {
+                expect(mockSocket.emit).toHaveBeenCalledWith("content", {
+                    id: 101,
+                    owners: null,
+                    title: "test",
+                    content: "hello world!",
+                    type: "text"
+                });
+            });
+        });
+
+        test('Testing if component receives data from socket', async () => {
+            expect(mockSocket.on).toHaveBeenCalledTimes(2);
+            expect(mockSocket.on).toHaveBeenCalledWith("content", expect.any(Function));
+            expect(mockSocket.on).toHaveBeenCalledWith("comment", expect.any(Function));
+        });
+
+        test('Testing if component updates when receiving data', async () => {
+            await act(async() => {
+                await callback({
+                    id: 101,
+                    type: "text",
+                    title: "new title",
+                    content: "new content",
+                    owners: [{ email: "banan@gmail.com" }]
+                });
+            });
+            
+            await waitFor(() => {
+                expect(screen.getByDisplayValue("new title")).toBeInTheDocument();
+            });
+        });
+
     });
 });
