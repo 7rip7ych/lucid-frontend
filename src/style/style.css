@@ -49,11 +49,46 @@ header {
     padding: 1.4rem 3rem;
 }
 
+button {
+    cursor: pointer;
+}
+
 main {
     width: 96%;
     max-width: 64rem;
     margin: 1.4rem auto;
     flex: 1 0 auto;
+}
+
+.wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.wrap .main {
+    width: 50%;
+    margin: 0;
+    margin-left: 20%;
+    padding: 1rem
+}
+
+.wrap .aside {
+    width: 20%;
+    min-width: 200px;
+    border-left: 1px solid #0000005e;
+    padding: 1rem;
+}
+
+@media (max-width: 870px) {
+    .wrap .main {
+        margin: 0;
+    }
+    .wrap .aside {
+        width: 100%;
+    }
 }
 
 .new-doc {
@@ -402,4 +437,84 @@ header a:hover {
     color: #fff;
     padding: 1.4rem 3rem;
     margin-bottom: 1rem;
+}
+
+
+.comment-section {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    gap: 1rem;
+}
+
+.comment-form {
+    display: block;
+    position: relative;
+    padding: 2rem 0.8rem 1rem;
+    border: 1px solid #0000005c;
+    margin: 1rem  0;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px #0000008a;
+    text-align: right;
+}
+
+.comment-form .close-button {
+    color: #020202;
+    top: 0px;
+}
+
+.comment-form .enter {
+    padding: 0.3rem 0.7rem;
+    border-radius: 50px;
+    background: #fbfbfb;
+    font-size: 0.9rem;
+    box-shadow: 0 0px 8px #0003;
+    border: 1px solid #0000001c;
+    color: #0064ff;
+}
+
+.comment-form .enter:active {
+    background: #a4a4a4;
+}
+
+.comment-form .enter:hover {
+    background: #fffdfd;
+    box-shadow: 0 0 10px #00000052;
+    border: 1px solid #fff;
+}
+
+.comment-form .comment-text {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 15px;
+    border-width: 1px;
+    resize: vertical;
+}
+
+.comment {
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 1rem;
+    box-shadow: 0 0 5px #00000036;
+}
+
+.comment .byline {
+    display: block;
+    font-weight: 550;
+    font-size: 0.9rem;
+}
+
+.comment p {
+    margin: 0.5rem 0 0.8rem;
+    color: #222;
+}
+
+.comment .delete-button {
+    background-color: transparent;
+    border: 0;
+    color: #db0000;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    padding: 0.2rem;
 }

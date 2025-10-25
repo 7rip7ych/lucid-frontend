@@ -2,10 +2,15 @@ import React from 'react';
 import Index from '../views/Index';
 import { render, screen } from '@testing-library/react';
 import { describe, test, expect } from 'vitest';
+import { MemoryRouter } from 'react-router-dom';
 
 describe('Index', () => {
     test('renders Index', () => {
-        render(<Index />);
+        render(
+            <MemoryRouter>
+                <Index />
+            </MemoryRouter>
+        );
         
         const h2Element = screen.getByRole('heading', { level: 2 });
         

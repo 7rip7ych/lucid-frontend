@@ -18,9 +18,10 @@ const comments = {
         return result;
     },
     deleteOneComment: async function deleteOneComment(id) {
-        const response = await fetch(`${server}comments/${id}`, {  method: 'DELETE',
-        headers: { 'x-access-token': auth.token }
-         });
+        const response = await fetch(`${server}comments/${id}`, {
+            method: 'DELETE',
+            headers: { 'x-access-token': auth.token }
+        });
         const result = await response.json();
 
         return result;
