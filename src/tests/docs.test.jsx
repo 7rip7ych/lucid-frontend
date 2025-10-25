@@ -1,54 +1,107 @@
 import documents from "../views/models/docs";
-import { describe, test, expect } from 'vitest';
+import users from "../views/models/users";
+import { describe, test, expect, beforeEach, vi, afterEach} from 'vitest';
+import "@testing-library/jest-dom/vitest";
 
+const fetchMock = vi.fn();
 describe('Testing documents functions:', async() => {
     // Prepare
-    const addedDoc = await documents.addOneDoc({'title': 'Hello', 'content': 'world'});
-    const docs = await documents.allDocuments();
-    const lastId = docs[docs.length - 1]._id;
-    const lastDoc = await documents.getOneDoc(lastId);
-
-    test('allDocuments returns all documents', () => {
-        expect(docs).toBeTypeOf('object');
-        expect(docs.length).toBeGreaterThanOrEqual(1);
+    beforeEach(() => {
+        vi.stubGlobal('fetch', fetchMock);
     });
 
-    test('addOneDoc adds one document', () => {
-        expect(addedDoc.insertedId).toBeDefined();
-        expect(lastId).toBe(addedDoc.insertedId);
+    afterEach(() => {
+        vi.resetAllMocks();
     });
 
-    test('getOneDoc gets one document', () => {
-        expect(lastDoc).toBeTypeOf('object');
-        expect(lastDoc).toStrictEqual({
-            '_id': lastId,
-            'title': 'Hello',
-            'content': 'world'
+    test('usersDocuments returns all documents', async() => {
+        fetch.mockResolvedValueOnce({
+            json: async () => ({
+                data: {
+                    userDocuments: "testObject"
+                }
+            })
         });
+
+        const res = await users.usersDocuments(123);
+        expect(await res).toEqual('testObject');
+        expect(fetchMock).toHaveBeenCalledOnce();
     });
 
-    const updatedDoc = await documents.updateOneDoc({
-        'id': lastId,
-        'title': 'Hello',
-        'content': 'update!'
-    });
-    const getUpdated = await documents.getOneDoc(lastId);
-
-    test('updateOneDoc updates one document', () => {
-        expect(updatedDoc.modifiedCount).toBe(1);
-        expect(getUpdated).toStrictEqual({
-            '_id': lastId,
-            'title': 'Hello',
-            'content': 'update!'
+    test('getOneDoc gets one document', async() => {
+        fetch.mockResolvedValueOnce({
+            json: async () => ({
+                data: {
+                    document: "testObject"
+                }
+            })
         });
+        
+        const res = await documents.getOneDoc(123);
+        expect(await res).toEqual('testObject');
+        expect(fetchMock).toHaveBeenCalledOnce();
     });
 
-    const deletedDoc = await documents.deleteOneDoc(lastId);
-    
+    test('documentComments gets comments', async() => {
+        fetch.mockResolvedValueOnce({
+            json: async () => ({
+                data: {
+                    documentComments: "testObject"
+                }
+            })
+        });
+        
+        const res = await documents.documentComments(123);
+        expect(await res).toEqual('testObject');
+        expect(fetchMock).toHaveBeenCalledOnce();
+    });
+
+    test('addOneDoc adds one document', async() => {
+        fetch.mockResolvedValueOnce({
+            json: async () => ({
+                data: "testObject"
+            })
+        });
+
+        const res = await documents.addOneDoc(123);
+        expect(await res.data).toEqual('testObject');
+        expect(fetchMock).toHaveBeenCalledOnce();
+    });
+
+    test('updateOneDoc updates one document', async() => {
+        fetch.mockResolvedValueOnce({
+            json: async () => ({
+                data: "testObject"
+            })
+        });
+        
+        const res = await documents.updateOneDoc(123);
+        expect(await res.data).toEqual('testObject');
+        expect(fetchMock).toHaveBeenCalledOnce();
+    });
+
     test('deleteOneDoc deletes one document', async() => {
-        expect(deletedDoc.deletedCount).toBe(1);
-        await expect(async() => await documents.getOneDoc(lastId)).rejects.toThrowError('Unexpected end of JSON input');
+        fetch.mockResolvedValueOnce({
+            json: async () => ({
+                data: "testObject"
+            })
+        });
+        
+        const res = await documents.deleteOneDoc(123);
+        expect(await res.data).toEqual('testObject');
+        expect(fetchMock).toHaveBeenCalledOnce();
     });
-    
-    // No test for delete all function to preserve the documents
+
+    test('deleteAllDocs deletes all documents', async() => {
+        fetch.mockResolvedValueOnce({
+            json: async () => ({
+                data: "testObject"
+            })
+        });
+        
+        const res = await documents.deleteAllDocs();
+        expect(await res.data).toEqual('testObject');
+        expect(fetchMock).toHaveBeenCalledOnce();
+    });
+
 })

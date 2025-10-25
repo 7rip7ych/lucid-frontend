@@ -1,7 +1,8 @@
 import Index from '../views/Index';
 import { render, screen, waitFor } from '@testing-library/react';
-import { vi, describe, test, expect } from 'vitest';
+import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
+import { act } from 'react';
 
 const testDocs = [
     {
@@ -21,24 +22,11 @@ const testDocs = [
 ]
 
 describe('Index', () => {
-    test('renders Index', () => {
-        render(
-            <MemoryRouter>
-                <Index />
-            </MemoryRouter>
-        );
-        
-        const h2Element = screen.getByRole('heading', { level: 2 });
-        
-        expect(h2Element).toBeInTheDocument();
-        expect(h2Element).toHaveTextContent('dokument');
-    });
-
-    test('renders documents', async () => {
-        vi.mock(import('../views/models/docs.jsx'), async() => {
+    beforeEach(async() => {
+        vi.mock(import('../views/models/users.jsx'), async() => {
             return {
                 default: {
-                    allDocuments() {
+                    usersDocuments() {
                         return testDocs;
                     }
                 },
@@ -46,17 +34,29 @@ describe('Index', () => {
             }
         });
     
-        render(
-            <MemoryRouter>
-                <Index />
-            </MemoryRouter>
-        );
+        await act(async() => {
+            render(
+                <MemoryRouter>
+                    <Index />
+                </MemoryRouter>
+            );
+        });
+    });
 
+    afterEach(() => {
+        vi.resetAllMocks();
+    })
+    test('renders Index', async() => {
+        const h2Element = await screen.getByRole('heading', { level: 2 });
+        
+        expect(h2Element).toBeInTheDocument();
+        expect(h2Element).toHaveTextContent('dokument');
+    });
+
+    test('renders documents', async () => {
         waitFor(() => {
             expect(screen.getByText(testDocs[0].title)).toBeInTheDocument();
             expect(screen.getByText(testDocs[1].title)).toBeInTheDocument();
         });
-
-        vi.resetAllMocks();
     });
 });
