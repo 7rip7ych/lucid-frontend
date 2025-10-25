@@ -58,6 +58,7 @@ main {
     max-width: 64rem;
     margin: 1.4rem auto;
     flex: 1 0 auto;
+    text-align: center;
 }
 
 .wrap {
@@ -103,6 +104,12 @@ textarea {
     padding: 1.4rem;
 }
 
+/* standardize textarea */
+textarea.content {
+    margin: 0;
+    border-radius: 0;
+}
+
 input[type=submit] {
     cursor: pointer;
     transition: background-color 0.3s ease-out, border 0.3s ease-out;
@@ -124,16 +131,25 @@ header a:hover {
     color: #ccc;
 }
 
+
+/* loading */
 .loading-gif {
     position: relative;
+    display: block;
     max-width: 200px;
+    margin: 1px auto;
 }
 
+.loading, 
+.loading button {
+    cursor: wait !important;
+}
 
 .editor-form .inline-buttons input.success-animation {
     background-color: #27AE14;
     border: 2px inset #3a9b3a;
 }
+
 
 
 /* Editor */
@@ -146,14 +162,18 @@ header a:hover {
     box-shadow: 0 5px 10px #000000a1;
 }
 
+.editor-form {
+    padding: 0.5rem 0;
+}
+
 .editor-form input[type="text"] {
     text-align: center;
 }
 
-.editor-form textarea {
+.editor-form .content {
     max-width: 100%;
     min-width: 100%;
-    resize: vertical;
+    background-color: transparent;
 }
 
 .editor-form label {
@@ -161,8 +181,11 @@ header a:hover {
 }
 
 .editor-form .title {
-    padding: 18px 5px 14px;
+    padding: 14px 5px 8px;
     font-size: 1.5rem;
+    border-radius: 0.9em;
+    border: 1px solid #00000025;
+    box-shadow: 0 1px 6px #00000025;
 }
 
 .editor-form .subtitle.readonly {
@@ -171,7 +194,6 @@ header a:hover {
     margin-bottom: 8px;
     color: #555;
     font-size: 0.9rem;
-    margin-top: -5px;
 }
 
 .inline-buttons {
@@ -193,24 +215,27 @@ header a:hover {
 
 /* editor switch button */
 .toggle-container {
-    display: flex;
-    width: 100%;
+    display: inline-flex;
+    width: 50%;
+    min-width: fit-content;
     flex-direction: row;
-    justify-content: center;
-    gap: 1rem;
-    padding: 0.5rem;
-    line-height: 34px;
-    font-size: 1.2rem;
-    background: #eaeaea;
-    margin-bottom: 0.5rem;
-    border: 3px inset #ddd;
+    justify-content: space-evenly;
+    gap: 0.5rem;
+    padding: 0.2rem 1rem;
+    line-height: 25px;
+    font-size: 1.05rem;
+    background: transparent;
+    margin-bottom: 8px;
+    border: 1px solid #008dffa1;
+    border-radius: 2rem;
+    box-shadow: 0 0 4px #0070ff6d, 0 0 3px #0070ff6d inset;
 }
 
 .switch {
     position: relative;
     display: inline-block;
-    width: 60px;
-    height: 34px;
+    width: 45px;
+    height: 25px;
 }
 
 .switch .toggle-checkbox {
@@ -234,10 +259,10 @@ header a:hover {
 .slider:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
+    height: 19px;
+    width: 19px;
+    left: 3px;
+    bottom: 3px;
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
@@ -252,9 +277,9 @@ header a:hover {
 }
 
 .toggle-checkbox:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
+    -webkit-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    transform: translateX(20px);
 }
 
 .slider.round {
@@ -269,6 +294,7 @@ header a:hover {
 .code-editor {
     background-color: #1e1e1e;
     position: relative;
+    text-align: start;
 }
 
 .code-editor .inline-buttons {
@@ -285,6 +311,7 @@ header a:hover {
     border: 3px outset #0085EE;
     border-radius: 2px;
     cursor: pointer;
+    margin-bottom: 10px;
 }
 
 .blue-button:active {
@@ -497,12 +524,14 @@ header a:hover {
     border-radius: 15px;
     padding: 1rem;
     box-shadow: 0 0 5px #00000036;
+    text-wrap: wrap;
+    word-wrap: break-word;
 }
 
 .comment .byline {
     display: block;
     font-weight: 550;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 .comment p {
@@ -517,4 +546,98 @@ header a:hover {
     font-size: 0.8rem;
     letter-spacing: 1px;
     padding: 0.2rem;
+}
+
+/* highlights */
+.commentedLine {
+    background-color: #ffffff38;
+}
+
+/* Comments made by others */
+.commentGlyph {
+    background: blue;
+    width: 6px !important;
+	margin-left: 4px;
+}
+
+/* Comments made by current user */
+.myCommentGlyph {
+    background: #ffffff50;
+    width: 6px !important;
+	margin-left: 4px;
+}
+
+.editor-container {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.editor-container, .backdrop, textarea.content {
+    width: 100%;
+    height: 60vh;
+}
+
+.highlights, textarea.content {
+    padding: 1rem;
+    font: 16px/22px 'Noto Sans', sans-serif;
+    letter-spacing: 1px;
+    text-align: start;
+}
+
+.backdrop {
+    overflow: auto;
+    background-color: #fff;
+    position: absolute;
+    z-index: 1;
+    /*pointer-events: none;*/
+    border: 1px solid transparent;
+    border-radius: 12px;
+}
+
+.highlights {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: transparent;
+}
+
+textarea.content {
+    display: block;
+    position: absolute;
+    z-index: 2;
+    color: #222;
+    background-color: transparent;
+    overflow: auto;
+    resize: none;
+    border: 1px solid #00000025;
+    border-radius: 1rem;
+    height: 100%;
+    box-shadow: 0px 1px 6px #00000025;
+}
+
+.comment.focus {
+    transform: scale(1.05);
+    box-shadow: 1px 2px 6px #00000070;
+}
+
+mark {
+    color: transparent;
+    background-color: #53aeff;
+}
+
+mark.comment-highlight {
+    color: transparent;
+    background-color: #ffb30040;
+}
+
+mark.my-comment-highlight {
+    color: transparent;
+    background-color: #0000001a;
+}
+
+mark.comment-highlight.focus {
+    background-color: #ffb300a0;
+}
+
+mark.my-comment-highlight.focus {
+    background-color: #3894f7ab;
 }

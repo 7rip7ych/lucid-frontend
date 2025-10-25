@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
@@ -10,6 +10,7 @@ import documents from './models/docs';
 import TextEditor from './components/TextEditor';
 import CodeEditor from './components/CodeEditor';
 import auth from './models/auth';
+import commentFunctions from './models/comments';
 
 const SERVER_URL = "https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/";
 // const SERVER_URL = "http://localhost:1337/";
@@ -24,6 +25,7 @@ function Doc() {
     const [temp, setTemp] = useState("");
     const [selection, setSelection] = useState([]);
     const [comments, setComments] = useState([]);
+    const [commentMode, setCommentMode] = useState(false);
 
     useEffect(() => {
         const loadData = async () => {
@@ -35,12 +37,19 @@ function Doc() {
             setTemp(docData);
 
             // set comments
-            let tempComments = [{
-                id: 1,
-                owner: "7rip7ych",
+            /*let tempComments = [{
+                _id: 1,
+                owner: {email: "dev.7rip7ych@gmail.com"},
                 content: "comment example text",
-                selection: [1, "/"]
-            }];
+                selection: 1
+            },
+            {
+                _id: 2,
+                owner: {email: "7rip7ych"},
+                content: "comment some text",
+                selection: 3
+            }];*/
+            const tempComments = await documents.documentComments(id);
             setComments(tempComments);
 
             setLoading();
@@ -63,61 +72,82 @@ function Doc() {
         }
     }
 
+    const deleteComment = useCallback(async(e) => {
+        e.preventDefault();
+        var commentId = e.target.parentNode.dataset.id;
+        await commentFunctions.deleteOneComment(commentId);
+        socket.current.emit("comment", id);
+        e.target.parentNode.remove();
+    }, [id]);
+
     useEffect(() => {
         // display comments on page
         let section = document.getElementById("commentSection");
         if (!section) { return; } // return if unrendered
+
         section.innerHTML = "";
         if (!comments) { return; } // return if no comments
+
         comments.forEach((comment) => {
             let ele = document.createElement("div");
             ele.className = "comment";
-            ele.id = comment.id;
+            ele.dataset.id = comment._id;
+            ele.dataset.selection = comment.selection;
             ele.innerHTML = `
-                <span class="byline">${comment.owner}</span>
+                <span class="byline">${comment.owner.email}</span>
                 <p>${comment.content}</p>
                 <button class="delete-button">Delete</button>
             `;
             section.appendChild(ele);
+
+            ele.onmouseenter = () => {
+                var sel = document.querySelectorAll(`[data-id="${ele.dataset.id}"]`);
+                sel.forEach(ele => ele.classList.add("focus"));
+            }
+            ele.onmouseleave = () => {
+                var sel = document.querySelectorAll(`[data-id="${ele.dataset.id}"]`);
+                sel.forEach(ele => ele.classList.remove("focus"));
+            }
         });
+
         section.querySelectorAll(".delete-button").forEach(button => button.addEventListener("click", deleteComment))
-    }, [comments]);
+    }, [comments, deleteComment]);
 
 
     function openCommentForm() {
         // highlight text
         document.querySelector(".comment-form").style.display = "block";
+        setCommentMode(true);
     }
 
     function closeCommentForm(e) {
         e.preventDefault();
         document.querySelector(".comment-form").style.display = "none";
+        setCommentMode(false);
     }
 
-    function addComment(e) {
+    async function addComment(e) {
         e.preventDefault();
+        // Define comment object
         let comment = {
-            owner: auth.email,
+            owner: auth.userId,
             document: data.id,
             content: document.getElementById('commentText').value,
             selection: selection
         }
 
-        socket.current.emit("new-comment", comment);
+        commentFunctions.addOneComment(comment); // Add to database
+        var newComments = await documents.documentComments(id); // Get all comments
+        setComments(await newComments);
+        socket.current.emit("comment", id); // Emit change
 
         closeCommentForm(e);
-    }
-
-    function deleteComment(e) {
-        e.preventDefault();
-        socket.current.emit("del-comment", e.target.parentNode.id);
-        e.target.parentNode.remove();
     }
 
     const actions = {
         create: async function createDoc(content=document.getElementById("contenteditor").value) {
             let newDoc = {
-                "owner": auth.email,
+                "owners": auth.userId,
                 "title": document.getElementById("titleeditor").value,
                 "content": content,
                 "type": type
@@ -129,7 +159,7 @@ function Doc() {
         update: async function updateDoc(content=document.getElementById("contenteditor").value) {
             let updatedDoc = {
                 "id": data.id,
-                "owner": auth.email,
+                "owners": auth.userId,
                 "title": document.getElementById("titleeditor").value,
                 "content": content,
                 "type": type
@@ -156,7 +186,7 @@ function Doc() {
             if (socket.current) {
                 var obj = {
                     id: data.id,
-                    owner: auth.email,
+                    owners: auth.userId,
                     title: document.getElementById("titleeditor").value,
                     content: content,
                     type: type
@@ -187,9 +217,23 @@ function Doc() {
         });
 
         // set comments
-        socket.current.on("comment", (comments) => {
-            setComments(comments);
+        socket.current.on("new-comment", async() => {
+            console.log("sock")
+            var newComments = await documents.documentComments(id);
+            setComments(await newComments);
         });
+
+        socket.current.on("del-comment", async() => {
+            console.log("sock")
+            var newComments = await documents.documentComments(id);
+            setComments(await newComments);
+        })
+
+        socket.current.on("comment", async() => {
+            console.log("sock")
+            var newComments = await documents.documentComments(id);
+            setComments(await newComments);
+        })
 
         return () => {
             socket.current.disconnect();
@@ -211,27 +255,16 @@ function Doc() {
                     <span>Code Editor</span>
                 </div>
                 {load}
-                {React.cloneElement(editor, { data: data, actions: actions })}
+                {React.cloneElement(editor, { data: data, actions: actions, comments: comments, commentMode: commentMode })}
             </main>
             <aside className="aside">
                 <button className="blue-button comment-button" id="openCommentForm" onClick={openCommentForm}>Comment</button>
-                <p id="selectionDisplay"></p>
                 <form className='comment-form' style={{display: 'none'}} onSubmit={() => {return false}}>
                     <button className='close-button' onClick={closeCommentForm}>&#10005;</button>
                     <textarea className='comment-text' id='commentText' rows="2" autoFocus></textarea>
                     <button className="enter" onClick={addComment}>Comment</button>
                 </form>
                 <div className="comment-section" id="commentSection">
-                    <div className='comment'>
-                        <span className='byline'>7rip7ych</span>
-                        <p>comment contents bla bla bla</p>
-                        <button className='delete-button'>Delete</button>
-                    </div>
-                    <div className='comment'>
-                        <span className='byline'>7rip7ych</span>
-                        <p>comment contents bla bla bla</p>
-                        <button className='delete-button'>Delete</button>
-                    </div>
                 </div>
             </aside>
         </div>
