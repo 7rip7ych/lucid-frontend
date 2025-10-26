@@ -64,7 +64,7 @@ function Index() {
                 // </div>
 
                 // {/* <Link to={doc._id} className="document-button">Skriv</Link> */}
-                <DocInfo docId={doc._id} username={auth.email} docTitle={doc.title} docContent={doc.content}/>
+                <DocInfo key={doc._id} docId={doc._id} username={auth.email} docTitle={doc.title} docContent={doc.content}/>
 
                 // </div>
             ))}
