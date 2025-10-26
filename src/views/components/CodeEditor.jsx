@@ -28,6 +28,7 @@ function CodeEditor(props) {
         }
     }
     const selectRow = useCallback(() => {
+        if (!editorRef.current) { return };
         // Select row
         var sel = editorRef.current.getSelection();
         console.log(sel);
@@ -85,10 +86,12 @@ function CodeEditor(props) {
 
 
     function saveCode() {
+        if (!editorRef.current) { return };
         props.actions.update(editorRef.current.getValue());
     }
 
     async function executeCode() {
+        if (!editorRef.current) { return };
         var data = {
             code: btoa(editorRef.current.getValue())
         };
@@ -117,6 +120,7 @@ function CodeEditor(props) {
     }
 
     function handleChange() {
+        if (!editorRef.current) { return };
         props.actions.handleChange(editorRef.current.getValue());
     };
 
