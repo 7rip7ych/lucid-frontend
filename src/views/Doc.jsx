@@ -207,7 +207,7 @@ function Doc() {
             return;
         }
 
-        socket.current = io(SERVER_URL);
+        socket.current = io(SERVER_URL, { transports: ['websocket'] });
 
         socket.current.emit("create", id);
 
