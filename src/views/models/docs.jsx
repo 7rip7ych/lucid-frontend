@@ -4,49 +4,6 @@ const server = 'https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.
 // const server = 'http://localhost:1337/';
 
 const documents = {
-    // Fetch all documents
-    // allDocuments: async function allDocuments() {
-    //     const response = await fetch(server, { method: 'GET' });
-    //     const result = await response.json();
-
-    //     return result.docs;
-    // },
-    //Fetch all documents
-    allDocuments: async function allDocuments() {
-
-        const query = `
-        query {
-            documents {
-                _id
-                title
-                content
-                type
-                owners {
-                    _id
-                    email
-                }
-            }
-        }
-        `;
-        const response = await fetch(`${server}graphql`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-access-token': auth.token
-            },
-            body: JSON.stringify({ query })
-        })
-        const result = await response.json();
-
-        return result.data.documents;
-    },
-    // Fetch one document
-    // getOneDoc: async function getOneDoc(docId) {
-    //     const response = await fetch(`${server}${docId}`, { method: 'GET' });
-    //     const result = await response.json();
-
-    //     return result;
-    // },
     getOneDoc: async function getOneDoc(docsId) {
         const query = `
         query ($id: String!) {

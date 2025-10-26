@@ -55,7 +55,8 @@ function TextEditor(props) {
             if (lastRow !== -1) {
                 lines[lastRow] = lines[lastRow].replace(/<mark class="temp-highlight">([^\n]*)<\/mark>/, `$1`);
             }
-            if (document.querySelector(".comment-form").offsetParent !== null && row && lines[row-1]) {
+            var commentForm = document.querySelector(".comment-form");
+            if (commentForm && commentForm.offsetParent !== null && row && lines[row - 1]) {
                 lines[row-1] = lines[row-1].replace(/.*/, '<mark class="temp-highlight">$&</mark>');
             }
             
