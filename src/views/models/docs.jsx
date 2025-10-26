@@ -63,7 +63,7 @@ const documents = {
         `;
 
         const variables = {
-        id:`${docsId}`
+            id:`${docsId}`
         };
 
         const response = await fetch(`${server}graphql`, {
@@ -105,8 +105,9 @@ const documents = {
         return result;
     },
     deleteOneDoc: async function deleteOneDoc(id) {
-        const response = await fetch(`${server}docs/${id}`, {        method: 'DELETE',
-        headers: { 'x-access-token': auth.token }
+        const response = await fetch(`${server}docs/${id}`, {
+            method: 'DELETE',
+            headers: { 'x-access-token': auth.token }
         });
         const result = await response.json();
 
@@ -141,7 +142,7 @@ const documents = {
         `;
 
         const variables = {
-        id:`${docsId}`
+            id:`${docsId}`
         };
 
         const response = await fetch(`${server}graphql`, {

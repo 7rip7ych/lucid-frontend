@@ -1,5 +1,5 @@
 import { useState, useEffect} from "react";
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import users from './models/users';
@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Index() {
     const { location } = useLocation();
+    const navigate = useNavigate();
     const [docs, setDocs] = useState([]);
     const [load, setLoading] = useState(<img src={imgUrl} alt="loading" className="loading-gif" />);
     const navigate = useNavigate();

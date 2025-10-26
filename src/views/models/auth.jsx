@@ -1,5 +1,3 @@
-import Login from "../Login";
-
 const server = 'https://jsramverk-editor-idal24-gcg4bgaydzg5cgc4.northeurope-01.azurewebsites.net/';
 // const server = 'http://localhost:1337/';
 
