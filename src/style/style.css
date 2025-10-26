@@ -466,6 +466,109 @@ header a:hover {
     margin-bottom: 1rem;
 }
 
+.documents {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.document {
+    margin-right: 2rem;
+    margin-bottom: 2rem;
+    background-color: #ddd;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.documents h3 {
+    text-align: center;
+}
+
+.index-title {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.document-button {
+    margin-bottom: 0;
+    display: inline-block;
+    border: 1px;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0;
+    background-color: #0074D9;
+    color: #fff;
+    border-color: #5d94db;
+    text-decoration: none;
+    width: 5rem;
+    font-family: "Noto Sans", sans-serif;
+    font-size: 1rem;
+    line-height: 1.2;
+    text-align: center;
+    margin: 0.1rem;
+}
+
+.document-button:hover {
+    background-color: #66b2f5ff;
+}
+
+.document-content {
+    background-color: #fff;
+    min-height: 2.3rem;
+    margin-bottom: 3px;
+    border: 1px solid #333;
+}
+
+.document-content  p {
+    font-size: 0.7rem;
+}
+
+.share-form {
+    margin-right: 2rem;
+    margin-bottom: 2rem;
+    background-color: #ddd;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.share-form p {
+    margin-bottom: 0;
+    width: 10rem;
+}
+
+.share-form  label {
+    font-family: "Noto Sans", sans-serif;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.share-text {
+    /* height: 1rem; */
+    font-family: "Noto Sans", sans-serif;
+    font-size: 0.8rem;
+    margin-bottom: 0.4rem;
+    padding: 0.3rem;
+    max-width: 100%;
+}
+
+.add-share-doc {
+    position: absolute;
+    right: 1rem;
+    top: 8rem;
+}
+
+.add-share-doc input {
+    padding: 0.3rem;
+}
+
+.new-document-button {
+    position:absolute;
+    left: 10rem;
+    top: 8rem;
+    border-radius: 25%;
+    height: 4rem;
+    width: 5rem;
+}
+
 
 .comment-section {
     display: flex;
