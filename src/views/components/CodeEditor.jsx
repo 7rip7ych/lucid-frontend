@@ -30,11 +30,9 @@ function CodeEditor(props) {
     const selectRow = useCallback(() => {
         // Select row
         var sel = editorRef.current.getSelection();
-        console.log(sel);
         if (sel) {
             var line = sel.startLineNumber;
             props.actions.select(line);
-            console.log(line)
             if (document.querySelector(".comment-form").offsetParent !== null && monaco) {
                 // Show selection if comment form is open
                 editorRef.current.setSelection(new monaco.Range(line,1,line+1,1));
@@ -58,6 +56,7 @@ function CodeEditor(props) {
                     if (comment.owner.email === auth.email) {
                         decClass = "myCommentGlyph"
                     }
+                    
                     decArr.push({
                         range: new monaco.Range(comment.selection,1,comment.selection,1),
                         options: {
@@ -68,7 +67,7 @@ function CodeEditor(props) {
                     });
                 });
             }
-            
+
             decorations.set(decArr);
         }
     }, [monaco, decorations, props.comments])
