@@ -46,14 +46,15 @@ function Index() {
         <>
 
         <Header />
-        <main className="main">
-        <h2 className="index-title">{ auth.email } dokument's</h2>
-            {load}
-
+        <div className="title-flex">
             <button className="document-button new-document-button" onClick={handleNewDoc}>
                 Nytt
             </button>
+            <h2 className="index-title">{ auth.email } dokument's</h2>
             <AddSharedDoc />
+        </div>
+        <main className="main">
+            {load}
             <div className="documents">
                 {
                     docs.map((doc) => (
