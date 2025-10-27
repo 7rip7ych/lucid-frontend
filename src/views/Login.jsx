@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
-import auth from './models/auth';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+
+import auth from './models/auth';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -8,11 +9,6 @@ export default function Login() {
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
     document.title = 'Login';
-
-    //changes route when mounting
-    useEffect(() => {
-        navigate("/lucid-frontend/login");
-    }, []);
 
     const handleLogin = async (event) => {
         event.preventDefault();

@@ -1,8 +1,7 @@
 import Index from '../views/Index';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
-import { act } from 'react';
 
 const testDocs = [
     {

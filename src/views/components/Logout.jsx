@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import auth from '../models/auth';
 import { useNavigate } from 'react-router-dom';
+
+import auth from '../models/auth';
 
 //resets session and redirect to home page
 export default function Logout() {
@@ -9,5 +10,5 @@ export default function Logout() {
     useEffect(() => {
         auth.resetSession();
         navigate("/lucid-frontend/login");
-    }, []);
+    });
 };

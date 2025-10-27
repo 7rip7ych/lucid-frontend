@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState} from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import shareDoc from '../models/shareDoc.jsx';
 import auth from '../models/auth.jsx';
-import { useNavigate } from 'react-router-dom';
 
 function AddSharedDoc () {
     const [documentId, setDocumentId] = useState('');

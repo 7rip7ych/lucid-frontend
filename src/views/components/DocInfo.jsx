@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import shareDoc from '../models/shareDoc.jsx';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+
+import shareDoc from '../models/shareDoc.jsx';
 
 function DocInfo ({ docId, username, docTitle, docContent }) {
     const [email, setEmail] = useState('');

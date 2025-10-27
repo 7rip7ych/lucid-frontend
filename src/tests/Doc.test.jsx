@@ -168,7 +168,7 @@ describe('Doc', () => {
     describe('Sockets', () => {
         test('Testing if component connects to socket', async () => {
             await waitFor(() => {
-                expect(io).toHaveBeenCalledWith(SERVER_URL);
+                expect(io).toHaveBeenCalledWith(SERVER_URL, { transports: ['websocket'] });
                 expect(mockSocket.emit).toHaveBeenCalledWith("create", 101);
             });
         });

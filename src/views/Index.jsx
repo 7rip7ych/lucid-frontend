@@ -1,5 +1,6 @@
 import { useState, useEffect} from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
+
 import Header from './components/Header';
 import Footer from './components/Footer';
 import users from './models/users';
@@ -54,20 +55,11 @@ function Index() {
             </button>
             <AddSharedDoc />
             <div className="documents">
-                {docs.map((doc) => (
-                // <div key={doc._id} className="document">
-
-                // <h3 key={doc._id}>{doc.title}</h3>
-
-                // <div className="document-content">
-                //     <p>{doc.content.slice(0, 40)} ...</p>
-                // </div>
-
-                // {/* <Link to={doc._id} className="document-button">Skriv</Link> */}
-                <DocInfo key={doc._id} docId={doc._id} username={auth.email} docTitle={doc.title} docContent={doc.content}/>
-
-                // </div>
-            ))}
+                {
+                    docs.map((doc) => (
+                        <DocInfo key={doc._id} docId={doc._id} username={auth.email} docTitle={doc.title} docContent={doc.content}/>
+                    ))
+                }
             </div>
         </main>
         <Footer />

@@ -81,7 +81,7 @@ function CodeEditor(props) {
             if (sel && sel.startLineNumber) {
                 var line = sel.startLineNumber;
                 editorRef.current.setSelection(new monaco.Range(line,1,line+1,1));
-                props.actions.select(line);
+                props.actions ? props.actions.select(line) : null;
             }
         }
     }, [props.commentMode, monaco, props.actions]);
