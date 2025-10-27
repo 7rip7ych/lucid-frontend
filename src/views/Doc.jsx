@@ -69,7 +69,8 @@ function Doc() {
         await commentFunctions.deleteOneComment(commentId);
         socket.current.emit("comment", id);
         e.target.parentNode.remove();
-    }, [id]);
+        setComments(comments.filter(comment => comment._id !== commentId));
+    }, [id, comments]);
 
     useEffect(() => {
         // display comments on page
@@ -127,10 +128,11 @@ function Doc() {
             selection: selection
         }
 
-        commentFunctions.addOneComment(comment); // Add to database
-        var newComments = await documents.documentComments(id); // Get all comments
-        setComments(await newComments);
+        await commentFunctions.addOneComment(comment); // Add to database
         socket.current.emit("comment", id); // Emit change
+        // Get updated comments
+        var newComments = await documents.documentComments(id);
+        setComments(newComments);
 
         closeCommentForm(e);
     }
@@ -198,7 +200,7 @@ function Doc() {
             return;
         }
 
-        socket.current = io(SERVER_URL, { transports: ['websocket'] });
+        socket.current = io(SERVER_URL, { transports: ['websocket'] }); // Transoort for it to work on github
 
         socket.current.emit("create", id);
 

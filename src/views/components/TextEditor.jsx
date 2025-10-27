@@ -95,9 +95,10 @@ function TextEditor(props) {
         let field = document.getElementById("contenteditor");
         if (field) {
             let row = field.value.slice(0, field.selectionStart).split("\n").length;
+            props.actions.select(row);
             highlightRow(row);
         }
-    }, [props.commentMode, highlightRow])
+    }, [props.commentMode, highlightRow, props.actions])
     
 
     function highlightComments() {
