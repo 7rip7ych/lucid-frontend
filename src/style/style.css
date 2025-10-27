@@ -545,7 +545,6 @@ header a:hover {
 }
 
 .share-text {
-    /* height: 1rem; */
     font-family: "Noto Sans", sans-serif;
     font-size: 0.8rem;
     margin-bottom: 0.4rem;
@@ -554,9 +553,6 @@ header a:hover {
 }
 
 .add-share-doc {
-    /*! position: absolute; */
-    /*! right: 1rem; */
-    /*! top: 8rem; */
     width: 25%;
 }
 
@@ -566,9 +562,6 @@ header a:hover {
 }
 
 .new-document-button {
-    /*! position:absolute; */
-    /*! left: 10rem; */
-    /*! top: 8rem; */
     border-radius: 1rem;
     height: 2.5rem;
     width: 5rem;
