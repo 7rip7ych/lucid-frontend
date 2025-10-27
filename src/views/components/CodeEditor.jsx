@@ -12,7 +12,6 @@ function CodeEditor(props) {
 
     function handleEditorMount(editor) {
         editorRef.current = editor;
-        setDecorations(editorRef.current.createDecorationsCollection([]));
 
         // Title length
         document.getElementById("titleeditor").oninput = (e) => {
@@ -26,7 +25,10 @@ function CodeEditor(props) {
             let txt = props.data.content.replaceAll("// ", "")
             editorRef.current.setValue("// " + txt.replaceAll("\n", "\n// "));
         }
+        
+        setDecorations(editorRef.current.createDecorationsCollection([]));
     }
+
     const selectRow = useCallback(() => {
         if (!editorRef.current) { return };
         // Select row
@@ -57,9 +59,9 @@ function CodeEditor(props) {
                     if (comment.owner.email === auth.email) {
                         decClass = "myCommentGlyph"
                     }
-                    
+                    let i = parseInt(comment.selection)
                     decArr.push({
-                        range: new monaco.Range(comment.selection,1,comment.selection,1),
+                        range: new monaco.Range(i, 1, i, 1),
                         options: {
                             isWholeLine: true,
                             linesDecorationsClassName: decClass,
